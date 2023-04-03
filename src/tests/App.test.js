@@ -1,10 +1,32 @@
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
 import App from '../App';
+import renderWithRouterAndRedux from '../services/rwrar';
 
-test('Farewell, front-end', () => {
-  // Este arquivo pode ser modificado ou deletado sem problemas
-  render(<App />);
-  const linkElement = screen.getByText(/TRYBE/i);
-  expect(linkElement).toBeInTheDocument();
+describe('Testes Login', () => {
+  const email = 'alguem@email.com';
+  const password = 'coxinha123';
+
+  it('Testa inputs', () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+
+    const emailInput = screen.getByTestId('email-input');
+    const passwordInput = screen.getByTestId('password-input');
+    expect(emailInput).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
+
+    const buttonLogin = screen.getByRole('button', { name: 'Enter' });
+    expect(buttonLogin).toBeInTheDocument();
+    expect(buttonLogin).toBeDisabled();
+
+    userEvent.type(emailInput, email);
+    userEvent.type(passwordInput, password);
+    expect(buttonLogin).not.toBeDisabled();
+    userEvent.click(buttonLogin);
+
+    expect(history.location.pathname).toBe('/meals');
+  });
 });
+
+// Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
