@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import userReducer from './UserReducer';
 
 // const INITIAL_STATE = {};
 // const exampleReducer = (state = INITIAL_STATE, action) => {
@@ -8,7 +9,9 @@ import { combineReducers } from 'redux';
 //   }
 // };
 const rootReducer = combineReducers({
-  exampleReducer,
+  userReducer,
 });
 
 export default rootReducer;
+
+// Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;

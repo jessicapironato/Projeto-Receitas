@@ -13,3 +13,5 @@ root.render(
     </BrowserRouter>
   </Provider>, // caso erro provider dentro do browser router
 );
+
+// Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;

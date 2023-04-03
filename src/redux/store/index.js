@@ -12,3 +12,5 @@ if (window.Cypress) {
 }
 
 export default store;
+
+// Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;

@@ -10,3 +10,5 @@ function App() {
 }
 
 export default App;
+
+// Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
