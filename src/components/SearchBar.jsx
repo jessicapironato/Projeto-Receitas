@@ -29,37 +29,23 @@ class SearchInput extends Component {
   apiRequest = async (path) => {
     const { radioValue, input } = this.state;
     const { dispatch } = this.props;
-    const teste = this.buttonValidation(input, radioValue);
-    // Verificar se essa é a melhor forma de parar a função
-    if (teste === false) { return false; }
-    let result = {};
-    if ((path === '/meals')) {
-      dispatch(apiFood(radioValue, input));
-      if (radioValue === 'Ingredient') {
-        result = await getApiFoodByIngredient(input);
-      }
-      if (radioValue === 'Name') {
-        result = await getApiFoodByName(input);
-      }
-      if (radioValue === FIRST_LETTER) {
-        result = await getApiFoodByFirstLetter(input[0]);
-      }
+    const singleChar = this.buttonValidation(input, radioValue);
+    if (singleChar === false) { return false; }
+    dispatch(path === '/meals' ? apiFood(radioValue, input)
+      : apiDrink(radioValue, input));
+    const apiFunctions = {
+      Ingredient: path === '/meals' ? getApiFoodByIngredient
+        : drinkApi.getApiDrinkByIngredient,
+      Name: path === '/meals' ? getApiFoodByName : drinkApi.getApiDrinkByName,
+      [FIRST_LETTER]: path === '/meals' ? getApiFoodByFirstLetter
+        : drinkApi.getApiDrinkByFirstLetter,
+    };
+    const result = await apiFunctions[radioValue](input);
+    if (!result) {
+      global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    } else {
+      dispatch(requestApi(result));
     }
-
-    if ((path === '/drinks')) {
-      dispatch(apiDrink(radioValue, input));
-      if (radioValue === 'Ingredient') {
-        result = await drinkApi.getApiDrinkByIngredient(input);
-      }
-      if (radioValue === 'Name') {
-        result = await drinkApi.getApiDrinkByName(input);
-      }
-      if (radioValue === FIRST_LETTER) {
-        result = await drinkApi.getApiDrinkByFirstLetter(input[0]);
-      }
-    }
-
-    dispatch(requestApi(result));
   };
 
   render() {
