@@ -1,17 +1,23 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Header from '../components/Header';
 
-class Drinks extends Component {
+class DrinksDetails extends Component {
   render() {
+    const { history } = this.props;
     return (
       <>
-        <Header title="Drinks" caminho />
+        <Header title="DrinksDetails" history={ history } />
         <h1>Receitas</h1>
       </>
     );
   }
 }
 
-export default Drinks;
+DrinksDetails.propTypes = {
+  history: PropTypes.string,
+}.isRequired;
+
+export default DrinksDetails;
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
