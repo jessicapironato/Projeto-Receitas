@@ -38,9 +38,11 @@ class Login extends Component {
   // };
 
   render() {
+    // Lembrar de recolocar a validação
     const { password, email } = this.state;
-    const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
-    const passwordMinSize = 7;
+    // const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
+    const regex = /[a-z0-9]/i;
+    const passwordMinSize = 1;
 
     return (
       <form className="container-login">

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import userReducer from './UserReducer';
+import filterReducer from './FilterReducer';
 
 // const INITIAL_STATE = {};
 // const exampleReducer = (state = INITIAL_STATE, action) => {
@@ -10,6 +11,7 @@ import userReducer from './UserReducer';
 // };
 const rootReducer = combineReducers({
   userReducer,
+  filterReducer,
 });
 
 export default rootReducer;
