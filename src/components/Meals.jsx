@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Header from '../components/Header';
+import Header from './Header';
+import Recipes from '../pages/Recipes';
 
-class Recipes extends Component {
+class Meals extends Component {
   render() {
     const { history } = this.props;
     return (
       <>
         <Header title="Meals" history={ history } />
-
+        <Recipes />
         <h1>Receitas</h1>
       </>
     );
   }
 }
-
-Recipes.propTypes = {
+Meals.propTypes = {
   history: PropTypes.string,
 }.isRequired;
 
-export default Recipes;
-
-// Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
+export default Meals;
