@@ -18,9 +18,7 @@ class Header extends Component {
     }));
   };
 
-
   // const [searchInput, setSearchInput] = useState(true);
-
 
   render() {
     const { title, history } = this.props;

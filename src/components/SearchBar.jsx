@@ -1,4 +1,3 @@
-
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -110,7 +109,6 @@ class SearchInput extends Component {
     );
   }
 }
-
 
 SearchInput.propTypes = {
   dispatch: PropTypes.func,

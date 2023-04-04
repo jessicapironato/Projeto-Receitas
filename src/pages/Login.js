@@ -45,7 +45,6 @@ class Login extends Component {
     // const regex = /[a-z0-9]/i;
     const passwordMinSize = 7;
 
-
     return (
       <form className="container-login">
         <h1>App de Receitas</h1>
