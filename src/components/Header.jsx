@@ -11,13 +11,16 @@ class Header extends Component {
   state = {
     btnSearch: false,
   };
-  // const [searchInput, setSearchInput] = useState(true);
 
   enableSearchBar = () => {
     this.setState((initialState) => ({
       btnSearch: !initialState.btnSearch,
     }));
   };
+
+
+  // const [searchInput, setSearchInput] = useState(true);
+
 
   render() {
     const { title, history } = this.props;
@@ -50,12 +53,13 @@ class Header extends Component {
             />
           </button>
         )}
+
         { btnSearch && <SearchBar history={ history } />}
+
       </header>
     );
   }
 }
-// colocar links dentro da navy
 Header.propTypes = {
   history: PropTypes.string,
   caminho: PropTypes.bool,
