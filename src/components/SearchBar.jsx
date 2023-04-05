@@ -40,6 +40,7 @@ class SearchInput extends Component {
       [FIRST_LETTER]: path === '/meals' ? getApiFoodByFirstLetter
         : drinkApi.getApiDrinkByFirstLetter,
     };
+
     const result = await apiFunctions[radioValue](input);
     if (!result) {
       global.alert('Sorry, we haven\'t found any recipes for these filters.');

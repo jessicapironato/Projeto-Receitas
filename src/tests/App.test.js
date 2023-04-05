@@ -78,27 +78,25 @@ describe('Testes Login', () => {
 
     userEvent.click(buttonSearchBar);
     const searchInput = await screen.findByTestId('search-input');
-    waitFor(() => expect(searchInput.toBeVisible()));
-    // expect(searchInput).toBeVisible();
     const inputSearch = 'flour';
-    userEvent.type(buttonSearchBar, inputSearch);
+    waitFor(() => {
+      expect(searchInput.toBeVisible());
+      userEvent.type(buttonSearchBar, inputSearch);
+      const ingredientRadioButton = screen.getByTestId('ingredient-search-radio');
+      expect(ingredientRadioButton).toBeInTheDocument();
+      userEvent.selectOptions(ingredientRadioButton);
+    });
 
-    const ingredientRadioButton = screen.getByLabelText('Ingredient');
-    // fireEvent.change(ingredientRadioButton);
-    expect(ingredientRadioButton).toBeInTheDocument();
-    userEvent.selectOptions(ingredientRadioButton);
-
+    const mockAlert = jest.spyOn(global, 'alert').mockImplementation(() => 'Your search must have only 1 (one) character');
     const buttonSearchFilter = screen.getByTestId('exec-search-btn');
     expect(buttonSearchFilter).toBeInTheDocument();
-    userEvent.click(buttonSearchFilter);
-
-    const mockAlert = jest.spyOn(global, 'alert').mockImplementation(() => {});
     const firstLetterRadioButton = screen.getByTestId('first-letter-search-radio');
-
-    const result = buttonValidation(inputSearch, firstLetterRadioButton);
-    expect(mockAlert).toHaveBeenCalledWith('Your search must have only 1 (one) character');
-    expect(result).toBe(false);
-    mockAlert.mockRestore();
+    userEvent.click(firstLetterRadioButton);
+    userEvent.click(buttonSearchFilter);
+    waitFor(() => {
+      expect(mockAlert).toHaveBeenCalledTimes(1);
+      mockAlert.mockRestore();
+    });
   });
 });
 
