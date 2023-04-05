@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 class Profile extends Component {
   render() {
@@ -22,6 +23,8 @@ class Profile extends Component {
         >
           Favorite Recipes
         </button>
+
+        <Footer />
 
       </>
     );

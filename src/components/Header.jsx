@@ -19,6 +19,7 @@ class Header extends Component {
   };
 
   // const [searchInput, setSearchInput] = useState(true);
+
   render() {
     const { title, history } = this.props;
     const { btnSearch } = this.state;
@@ -37,7 +38,6 @@ class Header extends Component {
           />
         </button>
 
-        {console.log(history)}
         { pathNames.includes(history.location.pathname) && (
 
           <button
@@ -50,9 +50,10 @@ class Header extends Component {
               data-testid="search-top-btn"
             />
           </button>
-
         )}
-        { btnSearch && <SearchBar />}
+
+        { btnSearch && <SearchBar history={ history } />}
+
       </header>
     );
   }

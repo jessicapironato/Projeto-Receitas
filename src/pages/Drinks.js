@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Header from './Header';
-import Recipes from '../pages/Recipes';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 class Drinks extends Component {
   render() {
@@ -9,8 +9,9 @@ class Drinks extends Component {
     return (
       <>
         <Header title="Meals" history={ history } />
-        <Recipes />
+
         <h1>Receitas</h1>
+        <Footer />
       </>
     );
   }

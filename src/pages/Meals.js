@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Header from './Header';
-import Recipes from '../pages/Recipes';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+// import SearchBar from '../components/SearchBar';
 
 class Meals extends Component {
   render() {
@@ -9,14 +10,19 @@ class Meals extends Component {
     return (
       <>
         <Header title="Meals" history={ history } />
-        <Recipes />
+        {/* <SearchBar /> */}
+
         <h1>Receitas</h1>
+        <Footer />
       </>
     );
   }
 }
+
 Meals.propTypes = {
   history: PropTypes.string,
 }.isRequired;
 
 export default Meals;
+
+// Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
