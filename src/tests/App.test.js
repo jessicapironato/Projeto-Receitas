@@ -2,7 +2,6 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../App';
-import Meals from '../pages/Meals';
 import renderWithRouterAndRedux from '../services/rwrar';
 
 describe('Testes Login', () => {
@@ -101,3 +100,4 @@ describe('Testes Login', () => {
 });
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
+// Requisito 12-15: Pair Programming André Porto,Gregório Bezerra
