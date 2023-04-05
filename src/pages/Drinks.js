@@ -8,7 +8,7 @@ class Drinks extends Component {
     const { history } = this.props;
     return (
       <>
-        <Header title="Meals" history={ history } />
+        <Header title="Drinks" history={ history } />
 
         <h1>Receitas</h1>
         <Footer />
@@ -22,3 +22,5 @@ Drinks.propTypes = {
 }.isRequired;
 
 export default Drinks;
+
+// Requisitos 16 a 18: Patrick Fonseca e Jéssica Pironato;
