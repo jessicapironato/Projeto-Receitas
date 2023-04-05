@@ -2,7 +2,6 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../App';
-// import Profile from '../pages/Profile';
 import renderWithRouterAndRedux from '../services/rwrar';
 
 describe('Testes Login', () => {
@@ -69,60 +68,6 @@ describe('Testes Login', () => {
       // expect(searchInput).not.toBeVisible();
     });
   });
-
-  // it('3.Testa SearchBar na rota /meals', async () => {
-  //   const { history } = renderWithRouterAndRedux(<App />);
-
-  //   const buttonLogin = screen.getByRole('button', { name: 'Enter' });
-  //   const emailInput = screen.getByTestId(emailTestID);
-  //   const passwordInput = screen.getByTestId(passwordTestID);
-  //   userEvent.type(emailInput, email);
-  //   userEvent.type(passwordInput, password);
-  //   userEvent.click(buttonLogin);
-
-  //   expect(history.location.pathname).toBe('/meals');
-
-  //   const buttonSearchBar = screen.getByTestId(searchTopBtn);
-  //   expect(buttonSearchBar).toBeInTheDocument();
-
-  //   userEvent.click(buttonSearchBar);
-  //   const searchInput = await screen.findByTestId('search-input');
-  //   const inputSearch = 'flour';
-  //   waitFor(() => {
-  //     expect(searchInput.toBeVisible());
-  //     userEvent.type(buttonSearchBar, inputSearch);
-  //     const ingredientRadioButton = screen.getByTestId('ingredient-search-radio');
-  //     const firstLetterRadioButton = screen.getByTestId('first-letter-search-radio');
-  //     expect(ingredientRadioButton).toBeInTheDocument();
-  //     expect(ingredientRadioButton).not.toBeChecked();
-  //     userEvent.selectOptions(ingredientRadioButton);
-  //     expect(ingredientRadioButton).toBeChecked();
-  //     expect(firstLetterRadioButton).not.toBeChecked();
-  //   });
-
-  //   const mockAlert = jest.spyOn(global, 'alert').mockImplementation(() => 'Your search must have only 1 (one) character');
-  //   const buttonSearchFilter = screen.getByTestId('exec-search-btn');
-  //   expect(buttonSearchFilter).toBeInTheDocument();
-  //   const firstLetterRadioButton = screen.getByTestId('first-letter-search-radio');
-  //   userEvent.click(firstLetterRadioButton);
-  //   userEvent.click(buttonSearchFilter);
-  //   waitFor(() => {
-  //     expect(mockAlert).not.toHaveBeenCalled();
-  //     mockAlert.mockRestore();
-  //   });
-
-  //   const mockAlertNotFound = jest.spyOn(global, 'alert').mockImplementation(() => 'Sorry, we haven\'t found any recipes for these filters.');
-  //   waitFor(() => {
-  //     expect(searchInput.toBeVisible());
-  //     userEvent.type(buttonSearchBar, inputSearch);
-  //     const nameRadioButton = screen.getByTestId('name-search-radio');
-  //     expect(nameRadioButton).toBeInTheDocument();
-  //     userEvent.click(nameRadioButton);
-  //     userEvent.click(buttonSearchFilter);
-  //     expect(mockAlertNotFound).toHaveBeenCalledTimes(1);
-  //     mockAlertNotFound.mockRestore();
-  //   });
-  // });
 
   it('3. Testa SearchBar na rota /meals', async () => {
     const { history } = renderWithRouterAndRedux(<App />);
@@ -265,12 +210,26 @@ describe('Testes Login', () => {
     userEvent.click(doneRecipesBtn);
     expect(history.location.pathname).toBe('/done-recipes');
   });
-  // it('8.Testa botão Done Recipes do componente Profile', () => {
-  //   const { history } = renderWithRouterAndRedux(<Profile />);
-  //   const profileBtn = screen.getByTestId(profileTopBtn);
-  //   userEvent.click(profileBtn);
-  //   expect(history.location.pathname).toBe('/profile');
-  // });
+  it('8.Testa botão Done Recipes do componente Profile', () => {
+    renderWithRouterAndRedux(<App />);
+
+    const email2 = 'teste2@email.com';
+    const password2 = 'xablau1234';
+    const buttonLogin2 = screen.getByRole('button', { name: 'Enter' });
+    const emailInput2 = screen.getByTestId(emailTestID);
+    const passwordInput2 = screen.getByTestId(passwordTestID);
+    userEvent.type(emailInput2, email2);
+    userEvent.type(passwordInput2, password2);
+    userEvent.click(buttonLogin2);
+    const profileBtn = screen.getByTestId(profileTopBtn);
+    userEvent.click(profileBtn);
+
+    localStorage.clear();
+
+    userEvent.click(profileBtn);
+    // const result = getLocalStorageUSer();
+    // expect(result).toEqual('');
+  });
 });
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;

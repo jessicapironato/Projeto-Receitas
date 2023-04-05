@@ -72,4 +72,4 @@ Profile.propTypes = {
 export default Profile;
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
-// Requisito 57- 62: Jéssica Pironato e Patrick Fonseca;
+// Requisito 57- 62: Jéssica Pironato e Patrick Fonseca API Man;
