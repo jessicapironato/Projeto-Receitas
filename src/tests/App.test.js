@@ -1,18 +1,21 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../App';
+import Meals from '../pages/Meals';
 import renderWithRouterAndRedux from '../services/rwrar';
 
 describe('Testes Login', () => {
   const email = 'alguem@email.com';
   const password = 'coxinha123';
+  const emailTestID = 'email-input';
+  const passwordTestID = 'password-input';
 
   it('1.Testa inputs', () => {
     const { history } = renderWithRouterAndRedux(<App />);
 
-    const emailInput = screen.getByTestId('email-input');
-    const passwordInput = screen.getByTestId('password-input');
+    const emailInput = screen.getByTestId(emailTestID);
+    const passwordInput = screen.getByTestId(passwordTestID);
     expect(emailInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
 
@@ -37,8 +40,8 @@ describe('Testes Login', () => {
   it('2.Testa se o search renderiza corretamente', () => {
     const { history } = renderWithRouterAndRedux(<App />);
 
-    const emailInput = screen.getByTestId('email-input');
-    const passwordInput = screen.getByTestId('password-input');
+    const emailInput = screen.getByTestId(emailTestID);
+    const passwordInput = screen.getByTestId(passwordTestID);
     expect(emailInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
 
@@ -56,6 +59,46 @@ describe('Testes Login', () => {
     const searchIcon = screen.getByTestId('search-top-btn');
     userEvent.click(searchIcon);
     expect(searchIcon).toBeVisible();
+  });
+
+  it('3.Testa SearchBar', async () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+
+    const buttonLogin = screen.getByRole('button', { name: 'Enter' });
+    const emailInput = screen.getByTestId(emailTestID);
+    const passwordInput = screen.getByTestId(passwordTestID);
+    userEvent.type(emailInput, email);
+    userEvent.type(passwordInput, password);
+    userEvent.click(buttonLogin);
+
+    expect(history.location.pathname).toBe('/meals');
+
+    const buttonSearchBar = screen.getByTestId('search-top-btn');
+    expect(buttonSearchBar).toBeInTheDocument();
+
+    userEvent.click(buttonSearchBar);
+    const searchInput = await screen.findByTestId('search-input');
+    waitFor(() => expect(searchInput.toBeVisible()));
+    // expect(searchInput).toBeVisible();
+    const inputSearch = 'flour';
+    userEvent.type(buttonSearchBar, inputSearch);
+
+    const ingredientRadioButton = screen.getByLabelText('Ingredient');
+    // fireEvent.change(ingredientRadioButton);
+    expect(ingredientRadioButton).toBeInTheDocument();
+    userEvent.selectOptions(ingredientRadioButton);
+
+    const buttonSearchFilter = screen.getByTestId('exec-search-btn');
+    expect(buttonSearchFilter).toBeInTheDocument();
+    userEvent.click(buttonSearchFilter);
+
+    const mockAlert = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const firstLetterRadioButton = screen.getByTestId('first-letter-search-radio');
+
+    const result = buttonValidation(inputSearch, firstLetterRadioButton);
+    expect(mockAlert).toHaveBeenCalledWith('Your search must have only 1 (one) character');
+    expect(result).toBe(false);
+    mockAlert.mockRestore();
   });
 });
 

@@ -68,7 +68,7 @@ class SearchInput extends Component {
           <input
             data-testid="ingredient-search-radio"
             value="Ingredient"
-            id="ingredient"
+            id="Ingredient"
             name="radioValue"
             type="radio"
             onClick={ (e) => this.handleChange(e) }
@@ -78,7 +78,7 @@ class SearchInput extends Component {
           Name
           <input
             data-testid="name-search-radio"
-            id="name"
+            id="Name"
             value="Name"
             name="radioValue"
             type="radio"
@@ -89,7 +89,7 @@ class SearchInput extends Component {
           First Letter
           <input
             data-testid="first-letter-search-radio"
-            id="first-letter"
+            id="First Letter"
             value="First Letter"
             name="radioValue"
             type="radio"
