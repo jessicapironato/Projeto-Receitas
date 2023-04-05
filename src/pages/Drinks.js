@@ -14,6 +14,7 @@ class Drinks extends Component {
 
         <h1>Receitas</h1>
         <section>
+          { (apiResult.length === 1) && history.push(`/drinks/${apiResult[0].idDrink}`) }
           { apiResult.length > 0 && apiResult.map((recipe, index) => {
             if (index < numberOfRecipes) {
               return (

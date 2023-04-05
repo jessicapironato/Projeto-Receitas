@@ -18,6 +18,7 @@ class Meals extends Component {
 
         <h1>Receitas</h1>
         <section>
+          { (apiResult.length === 1) && history.push(`/meals/${apiResult[0].idMeal}`) }
           { apiResult.length > 0 && apiResult.map((recipe, index) => {
             if (index < numberOfRecipes) {
               return (
