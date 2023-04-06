@@ -8,7 +8,7 @@ import Recipes from '../components/Recipes';
 
 class Meals extends Component {
   render() {
-    const { history, btnSearch, apiResult } = this.props;
+    const { history, btnSearch } = this.props;
 
     return (
       <div>
@@ -18,7 +18,7 @@ class Meals extends Component {
         <h1>Receitas</h1>
         <Recipes history={ history } />
         <div>
-          <Footer history={history}/>
+          <Footer history={ history } />
         </div>
       </div>
 

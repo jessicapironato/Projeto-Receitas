@@ -8,7 +8,7 @@ import Recipes from '../components/Recipes';
 
 class Drinks extends Component {
   render() {
-    const { history, btnSearch, apiResult } = this.props;
+    const { history, btnSearch } = this.props;
     return (
       <>
         <Header title="Drinks" history={ history } />
