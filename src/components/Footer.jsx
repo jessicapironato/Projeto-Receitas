@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import iconDrinks from '../images/drinkIcon.svg';
 import iconMeals from '../images/mealIcon.svg';
-import { clearApi } from '../redux/actions';
+import { clearState } from '../redux/actions';
 
 class Footer extends Component {
   render() {
@@ -17,7 +17,7 @@ class Footer extends Component {
           <button
             type="button"
             onClick={ () => {
-              dispatch(clearApi());
+              dispatch(clearState('apiResult'));
               history.push('/drinks');
             } }
           >
@@ -30,7 +30,7 @@ class Footer extends Component {
           <button
             type="button"
             onClick={ () => {
-              dispatch(clearApi());
+              dispatch(clearState('apiResult'));
               history.push('/meals');
             } }
           >

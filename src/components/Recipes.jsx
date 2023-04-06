@@ -33,53 +33,38 @@ class Meals extends Component {
       <section>
         { (apiResult.length === 1)
         && history.push(`${pathname}/${apiResult[0][`id${foodOrDrink}`]}`) }
-
-        {apiResult.length === 0 ? (apiResultLocal.map((recipe, index) => {
-          if (index < numberOfRecipes) {
-            return (
-              <div
-                key={ recipe[`id${foodOrDrink}`] }
-                data-testid={ `${index}-recipe-card` }
-              >
-                <img
-                  src={ recipe[`str${foodOrDrink}Thumb`] }
-                  alt="Finished recipe ilustration"
-                  data-testid={ `${index}-card-img` }
-                />
-                <p
-                  data-testid={ `${index}-card-name` }
-                >
-                  { recipe[`str${foodOrDrink}`] }
-                </p>
-
-              </div>
-            );
-          }
-          return null;
-        }))
-          : (apiResult.length > 0 && apiResult.map((recipe, index) => {
+        <ul>
+          {(apiResult.length === 0 ? apiResultLocal : apiResult).map((recipe, index) => {
             if (index < numberOfRecipes) {
               return (
-                <div
+                <li
                   key={ recipe[`id${foodOrDrink}`] }
                   data-testid={ `${index}-recipe-card` }
                 >
-                  <img
-                    src={ recipe[`str${foodOrDrink}Thumb`] }
-                    alt="Finished recipe ilustration"
-                    data-testid={ `${index}-card-img` }
-                  />
+                  <button
+                    type="button"
+                    onClick={
+                      () => history.push(`${pathname}/${recipe[`id${foodOrDrink}`]}`)
+                    }
+                  >
+                    <img
+                      src={ recipe[`str${foodOrDrink}Thumb`] }
+                      alt="Finished recipe ilustration"
+                      data-testid={ `${index}-card-img` }
+                    />
+                  </button>
                   <p
                     data-testid={ `${index}-card-name` }
                   >
                     { recipe[`str${foodOrDrink}`] }
                   </p>
 
-                </div>
+                </li>
               );
             }
             return null;
-          }))}
+          })}
+        </ul>
       </section>
     );
   }
