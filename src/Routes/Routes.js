@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 import Login from '../pages/Login';
-import Meals from '../pages/Meals';
 import Drinks from '../pages/Drinks';
 import Profile from '../pages/Profile';
 import DoneRecipesPage from '../pages/DoneRecipesPage';
 import FavoriteRecipesPage from '../pages/FavoriteRecipesPage';
+import Meals from '../pages/Meals';
 // import firstComponent from '../pages/FirstPage';
 
 class Routes extends Component {

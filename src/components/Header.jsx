@@ -1,28 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import iconProfile from '../images/profileIcon.svg';
 import iconSearch from '../images/searchIcon.svg';
-import SearchBar from './SearchBar';
+import { btnSearch } from '../redux/actions';
 
 // rotas que renderizam o ícone de pesquisa
 const pathNames = ['/meals', '/drinks'];
 
 class Header extends Component {
-  state = {
-    btnSearch: false,
-  };
-
-  enableSearchBar = () => {
-    this.setState((initialState) => ({
-      btnSearch: !initialState.btnSearch,
-    }));
-  };
-
   // const [searchInput, setSearchInput] = useState(true);
 
   render() {
-    const { title, history } = this.props;
-    const { btnSearch } = this.state;
+    const { title, history, dispatch } = this.props;
     return (
       <header>
         <h1 data-testid="page-title">{title}</h1>
@@ -42,7 +32,7 @@ class Header extends Component {
 
           <button
             type="button"
-            onClick={ this.enableSearchBar }
+            onClick={ () => dispatch(btnSearch()) }
           >
             <img
               src={ iconSearch }
@@ -51,9 +41,6 @@ class Header extends Component {
             />
           </button>
         )}
-
-        { btnSearch && <SearchBar history={ history } />}
-
       </header>
     );
   }
@@ -63,4 +50,4 @@ Header.propTypes = {
   caminho: PropTypes.bool,
 }.isRequired;
 
-export default Header;
+export default connect()(Header);

@@ -1,9 +1,10 @@
-import { API_DRINK, API_FOOD, API_RESULT } from '../actions';
+import { API_DRINK, API_FOOD, API_RESULT, BTN_SEARCH, API_CLEAR } from '../actions';
 
 const INITIAL_STATE = {
   apiFood: {},
   apiDrink: {},
   apiResult: [],
+  btnSearch: false,
 };
 
 const filterReducer = (state = INITIAL_STATE, action) => {
@@ -22,6 +23,16 @@ const filterReducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       apiResult: action.payload,
+    };
+  case BTN_SEARCH:
+    return {
+      ...state,
+      btnSearch: !(state.btnSearch),
+    };
+  case API_CLEAR:
+    return {
+      ...state,
+      apiResult: [],
     };
 
   default:

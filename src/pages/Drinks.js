@@ -3,43 +3,19 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SearchBar from '../components/SearchBar';
+import Recipes from '../components/Recipes';
 
 class Drinks extends Component {
   render() {
-    const { history, apiResult } = this.props;
-    const numberOfRecipes = 12;
+    const { history, btnSearch } = this.props;
     return (
       <>
         <Header title="Drinks" history={ history } />
-
+        { btnSearch && <SearchBar history={ history } />}
         <h1>Receitas</h1>
-        <section>
-          { (apiResult.length === 1) && history.push(`/drinks/${apiResult[0].idDrink}`) }
-          { apiResult.length > 0 && apiResult.map((recipe, index) => {
-            if (index < numberOfRecipes) {
-              return (
-                <div
-                  key={ recipe.idDrink }
-                  data-testid={ `${index}-recipe-card` }
-                >
-                  <img
-                    src={ recipe.strDrinkThumb }
-                    alt="Finished recipe ilustration"
-                    data-testid={ `${index}-card-img` }
-                  />
-                  <p
-                    data-testid={ `${index}-card-name` }
-                  >
-                    { recipe.strDrink }
-                  </p>
-
-                </div>
-              );
-            }
-            return null;
-          })}
-        </section>
-        <Footer />
+        <Recipes history={ history } />
+        <Footer history={ history } />
       </>
     );
   }
@@ -47,10 +23,16 @@ class Drinks extends Component {
 
 const mapStateToProps = (state) => ({
   apiResult: state.filterReducer.apiResult,
+  btnSearch: state.filterReducer.btnSearch,
 });
 
 Drinks.propTypes = {
   history: PropTypes.string,
+  apiResult: PropTypes.arrayOf(PropTypes.shape({
+    strMeal: PropTypes.string,
+    strMealThumb: PropTypes.string,
+    idMeal: PropTypes.string,
+  })).isRequired,
 }.isRequired;
 
 export default connect(mapStateToProps)(Drinks);
