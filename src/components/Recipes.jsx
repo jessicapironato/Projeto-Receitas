@@ -23,8 +23,25 @@ class Meals extends Component {
     return Object.values(data)[0];
   };
 
-   render() {
-    const { history, history: { location: { pathname } }, apiResult } = this.props;
+  apiFiltered = async () => {
+    const { apiResultFilter, history: { location: { pathname } } } = this.props;
+
+    const reqMeal = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${apiResultFilter}`;
+    const reqDrink = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${apiResultFilter}`;
+
+    const urlApi = pathname === '/meals' ? reqMeal : reqDrink;
+    const response = await fetch(urlApi);
+    const data = await response.json();
+    return data;
+  };
+
+  render() {
+    const {
+      history,
+      history: { location: { pathname } },
+      apiResult,
+      // apiResultFilter,
+    } = this.props;
     const { apiResultLocal } = this.state;
 
     const numberOfRecipes = 12;
@@ -34,7 +51,11 @@ class Meals extends Component {
       <section>
         { (apiResult.length === 1)
         && history.push(`${pathname}/${apiResult[0][`id${foodOrDrink}`]}`) }
+        <CategoryButtons history={ history } />
         <ul>
+          {
+            // (apiResultFilter.length > 0) ? this.apiFiltered() : <p>DeuRuim</p>
+          }
           {(apiResult.length === 0 ? apiResultLocal : apiResult).map((recipe, index) => {
             if (index < numberOfRecipes) {
               return (
@@ -74,6 +95,7 @@ class Meals extends Component {
 const mapStateToProps = (state) => ({
   apiResult: state.filterReducer.apiResult,
   btnSearch: state.filterReducer.btnSearch,
+  apiResultFilter: state.filterReducer.apiResultFilter,
 });
 
 Meals.propTypes = {
@@ -83,6 +105,7 @@ Meals.propTypes = {
     strMealThumb: PropTypes.string,
     idMeal: PropTypes.string,
   })).isRequired,
+  apiResultFilter: PropTypes.string,
 }.isRequired;
 
 export default connect(mapStateToProps)(Meals);

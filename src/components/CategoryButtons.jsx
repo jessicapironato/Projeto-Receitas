@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { filterRecipes } from '../redux/actions';
 
 class CategoryButtons extends Component {
   state = {
@@ -23,6 +24,7 @@ class CategoryButtons extends Component {
   };
 
   render() {
+    const { dispatch } = this.props;
     const { request } = this.state;
     const numberOfCategories = 5;
     return (
@@ -30,13 +32,20 @@ class CategoryButtons extends Component {
         {
           (request.length > 0) ? (
             <nav>
+              <button
+                data-testid="All-category-filter"
+                onClick={ () => dispatch(filterRecipes('')) }
+              >
+                All
+              </button>
 
               {request.map(({ strCategory }, index) => {
                 if (index < numberOfCategories) {
                   return (
                     <button
-                      key={ index } // talvez dê problema usando esse index
+                      key={ index }
                       data-testid={ `${strCategory}-category-filter` }
+                      onClick={ () => dispatch(filterRecipes(strCategory)) }
                     >
                       { strCategory }
                     </button>
@@ -53,6 +62,10 @@ class CategoryButtons extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  apiResultFilter: state.filterReducer.apiResultFilter,
+});
+
 CategoryButtons.propTypes = {
   history: PropTypes.string,
   apiRequest: PropTypes.arrayOf(PropTypes.shape({
@@ -60,4 +73,4 @@ CategoryButtons.propTypes = {
   })).isRequired,
 }.isRequired;
 
-export default CategoryButtons;
+export default connect(mapStateToProps)(CategoryButtons);
