@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import CategoryButtons from './CategoryButtons';
 
 class Meals extends Component {
   state = {
@@ -22,7 +23,7 @@ class Meals extends Component {
     return Object.values(data)[0];
   };
 
-  render() {
+   render() {
     const { history, history: { location: { pathname } }, apiResult } = this.props;
     const { apiResultLocal } = this.state;
 
