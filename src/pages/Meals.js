@@ -3,48 +3,22 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-// import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/SearchBar';
+import Recipes from '../components/Recipes';
 
 class Meals extends Component {
   render() {
-    const { history, apiResult } = this.props;
-
-    const numberOfRecipes = 12;
+    const { history, btnSearch, apiResult } = this.props;
 
     return (
       <div>
         <Header title="Meals" history={ history } />
-        {/* <SearchBar /> */}
+        { btnSearch && <SearchBar history={ history } />}
 
         <h1>Receitas</h1>
-        <section>
-          { (apiResult.length === 1) && history.push(`/meals/${apiResult[0].idMeal}`) }
-          { apiResult.length > 0 && apiResult.map((recipe, index) => {
-            if (index < numberOfRecipes) {
-              return (
-                <div
-                  key={ recipe.idMeal }
-                  data-testid={ `${index}-recipe-card` }
-                >
-                  <img
-                    src={ recipe.strMealThumb }
-                    alt="Finished recipe ilustration"
-                    data-testid={ `${index}-card-img` }
-                  />
-                  <p
-                    data-testid={ `${index}-card-name` }
-                  >
-                    { recipe.strMeal }
-                  </p>
-
-                </div>
-              );
-            }
-            return null;
-          })}
-        </section>
+        <Recipes history={ history } />
         <div>
-          <Footer />
+          <Footer history={history}/>
         </div>
       </div>
 
@@ -54,6 +28,7 @@ class Meals extends Component {
 
 const mapStateToProps = (state) => ({
   apiResult: state.filterReducer.apiResult,
+  btnSearch: state.filterReducer.btnSearch,
 });
 
 Meals.propTypes = {

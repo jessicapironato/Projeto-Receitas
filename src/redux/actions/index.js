@@ -1,6 +1,8 @@
 export const API_FOOD = 'API_FOOD';
 export const API_DRINK = 'API_DRINK';
 export const API_RESULT = 'API_RESULT';
+export const BTN_SEARCH = 'BTN_SEARCH';
+export const API_CLEAR = 'API_CLEAR';
 export const CHANGE_SIGNAL = 'CHANGE_SIGNAL';
 
 export const apiFood = (payload, text) => ({
@@ -17,5 +19,12 @@ export const requestApi = (payload) => ({
   type: API_RESULT,
   payload,
 });
+export const btnSearch = () => ({
+  type: BTN_SEARCH,
+});
+export const clearApi = () => ({
+  type: API_CLEAR,
+});
+
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
