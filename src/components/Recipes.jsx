@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import CategoryButtons from './CategoryButtons';
 
 class Meals extends Component {
   state = {
@@ -33,7 +34,7 @@ class Meals extends Component {
       <section>
         { (apiResult.length === 1)
         && history.push(`${pathname}/${apiResult[0][`id${foodOrDrink}`]}`) }
-
+        <CategoryButtons history={ history } />
         {apiResult.length === 0 ? (apiResultLocal.map((recipe, index) => {
           if (index < numberOfRecipes) {
             return (
