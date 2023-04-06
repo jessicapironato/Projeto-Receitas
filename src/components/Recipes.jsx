@@ -23,24 +23,12 @@ class Meals extends Component {
     return Object.values(data)[0];
   };
 
-  apiFiltered = async () => {
-    const { apiResultFilter, history: { location: { pathname } } } = this.props;
-
-    const reqMeal = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${apiResultFilter}`;
-    const reqDrink = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${apiResultFilter}`;
-
-    const urlApi = pathname === '/meals' ? reqMeal : reqDrink;
-    const response = await fetch(urlApi);
-    const data = await response.json();
-    return data;
-  };
-
   render() {
     const {
       history,
       history: { location: { pathname } },
       apiResult,
-      // apiResultFilter,
+      apiResultFilter,
     } = this.props;
     const { apiResultLocal } = this.state;
 
@@ -53,10 +41,39 @@ class Meals extends Component {
         && history.push(`${pathname}/${apiResult[0][`id${foodOrDrink}`]}`) }
         <CategoryButtons history={ history } />
         <ul>
-          {
-            // (apiResultFilter.length > 0) ? this.apiFiltered() : <p>DeuRuim</p>
-          }
-          {(apiResult.length === 0 ? apiResultLocal : apiResult).map((recipe, index) => {
+          {apiResultFilter.length === 0
+          && (apiResult.length === 0 ? apiResultLocal : apiResult)
+            .map((recipe, index) => {
+              if (index < numberOfRecipes) {
+                return (
+                  <li
+                    key={ recipe[`id${foodOrDrink}`] }
+                    data-testid={ `${index}-recipe-card` }
+                  >
+                    <button
+                      type="button"
+                      onClick={
+                        () => history.push(`${pathname}/${recipe[`id${foodOrDrink}`]}`)
+                      }
+                    >
+                      <img
+                        src={ recipe[`str${foodOrDrink}Thumb`] }
+                        alt="Finished recipe ilustration"
+                        data-testid={ `${index}-card-img` }
+                      />
+                    </button>
+                    <p
+                      data-testid={ `${index}-card-name` }
+                    >
+                      { recipe[`str${foodOrDrink}`] }
+                    </p>
+
+                  </li>
+                );
+              }
+              return null;
+            })}
+          {apiResultFilter.length > 0 && apiResultFilter.map((recipe, index) => {
             if (index < numberOfRecipes) {
               return (
                 <li
@@ -105,7 +122,7 @@ Meals.propTypes = {
     strMealThumb: PropTypes.string,
     idMeal: PropTypes.string,
   })).isRequired,
-  apiResultFilter: PropTypes.string,
+  apiResultFilter: PropTypes.array,
 }.isRequired;
 
 export default connect(mapStateToProps)(Meals);

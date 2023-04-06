@@ -18,6 +18,7 @@ class Footer extends Component {
             type="button"
             onClick={ () => {
               dispatch(clearState('apiResult'));
+              dispatch(clearState('apiResultFilter'));
               history.push('/drinks');
             } }
           >
@@ -31,6 +32,7 @@ class Footer extends Component {
             type="button"
             onClick={ () => {
               dispatch(clearState('apiResult'));
+              dispatch(clearState('apiResultFilter'));
               history.push('/meals');
             } }
           >
