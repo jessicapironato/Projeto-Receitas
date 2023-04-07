@@ -17,7 +17,9 @@ class Meals extends Component {
 
   didMountApiRequest = async () => {
     const { history: { location: { pathname } } } = this.props;
-    const urlApi = pathname === '/meals' ? 'https://www.themealdb.com/api/json/v1/1/search.php?s=' : 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+    const urlFood = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+    const urlDrink = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+    const urlApi = pathname === '/meals' ? urlFood : urlDrink;
     const response = await fetch(urlApi);
     const data = await response.json();
     return Object.values(data)[0];

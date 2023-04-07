@@ -7,7 +7,8 @@ import Profile from '../pages/Profile';
 import DoneRecipesPage from '../pages/DoneRecipesPage';
 import FavoriteRecipesPage from '../pages/FavoriteRecipesPage';
 import Meals from '../pages/Meals';
-// import firstComponent from '../pages/FirstPage';
+import MealsDetails from '../pages/MealsDetails';
+import DrinksDetails from '../pages/DrinksDetails';
 
 class Routes extends Component {
   render() {
@@ -15,12 +16,12 @@ class Routes extends Component {
       <Switch>
         <Route exact path="/" component={ Login } />
         <Route exact path="/meals" component={ Meals } />
+        <Route exact path="/meals/:id" component={ MealsDetails } />
+        <Route exact path="/drinks/:id" component={ DrinksDetails } />
         <Route exact path="/drinks" component={ Drinks } />
         <Route exact path="/profile" component={ Profile } />
         <Route exact path="/done-recipes" component={ DoneRecipesPage } />
         <Route exact path="/favorite-recipes" component={ FavoriteRecipesPage } />
-        {/* <Route exact path="/meals/:id-da-receita" component={ Recipes } /> */}
-        {/* <Route exact path="/drinks/:id-da-receita" component={ Recipes } /> */}
         {/* <Route exact path="/meals/:id-da-receita/in-progress" component={ Recipes } /> */}
         {/* <Route exact path="/drinks/:id-da-receita/in-progress" component={ Recipes } /> */}
       </Switch>

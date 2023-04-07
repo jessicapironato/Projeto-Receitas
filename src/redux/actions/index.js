@@ -4,7 +4,9 @@ export const API_RESULT = 'API_RESULT';
 export const BTN_SEARCH = 'BTN_SEARCH';
 export const CLEAR_STATE = 'CLEAR_STATE';
 export const CHANGE_SIGNAL = 'CHANGE_SIGNAL';
+export const API_CARROCEL = 'API_CARROCEL';
 export const API_RESULT_FILTER = 'API_RESULT_FILTER';
+export const RECIPE_DETAILS = 'RECIPE_DETAILS';
 
 export const apiFood = (payload, text) => ({
   type: API_FOOD,
@@ -30,6 +32,14 @@ export const btnSearch = () => ({
 export const clearState = (nameState) => ({
   type: CLEAR_STATE,
   nameState,
+});
+export const recipeDetails = (payload) => ({
+  type: RECIPE_DETAILS,
+  payload,
+});
+export const apiCarrocel = (payload) => ({
+  type: API_CARROCEL,
+  payload,
 });
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
