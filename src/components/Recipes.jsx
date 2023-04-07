@@ -24,7 +24,12 @@ class Meals extends Component {
   };
 
   render() {
-    const { history, history: { location: { pathname } }, apiResult } = this.props;
+    const {
+      history,
+      history: { location: { pathname } },
+      apiResult,
+      apiResultFilter,
+    } = this.props;
     const { apiResultLocal } = this.state;
 
     const numberOfRecipes = 12;
@@ -35,52 +40,70 @@ class Meals extends Component {
         { (apiResult.length === 1)
         && history.push(`${pathname}/${apiResult[0][`id${foodOrDrink}`]}`) }
         <CategoryButtons history={ history } />
-        {apiResult.length === 0 ? (apiResultLocal.map((recipe, index) => {
-          if (index < numberOfRecipes) {
-            return (
-              <div
-                key={ recipe[`id${foodOrDrink}`] }
-                data-testid={ `${index}-recipe-card` }
-              >
-                <img
-                  src={ recipe[`str${foodOrDrink}Thumb`] }
-                  alt="Finished recipe ilustration"
-                  data-testid={ `${index}-card-img` }
-                />
-                <p
-                  data-testid={ `${index}-card-name` }
-                >
-                  { recipe[`str${foodOrDrink}`] }
-                </p>
+        <ul>
+          {apiResultFilter.length === 0
+          && (apiResult.length === 0 ? apiResultLocal : apiResult)
+            .map((recipe, index) => {
+              if (index < numberOfRecipes) {
+                return (
+                  <li
+                    key={ recipe[`id${foodOrDrink}`] }
+                    data-testid={ `${index}-recipe-card` }
+                  >
+                    <button
+                      type="button"
+                      onClick={
+                        () => history.push(`${pathname}/${recipe[`id${foodOrDrink}`]}`)
+                      }
+                    >
+                      <img
+                        src={ recipe[`str${foodOrDrink}Thumb`] }
+                        alt="Finished recipe ilustration"
+                        data-testid={ `${index}-card-img` }
+                      />
+                    </button>
+                    <p
+                      data-testid={ `${index}-card-name` }
+                    >
+                      { recipe[`str${foodOrDrink}`] }
+                    </p>
 
-              </div>
-            );
-          }
-          return null;
-        }))
-          : (apiResult.length > 0 && apiResult.map((recipe, index) => {
+                  </li>
+                );
+              }
+              return null;
+            })}
+          {apiResultFilter.length > 0 && apiResultFilter.map((recipe, index) => {
             if (index < numberOfRecipes) {
               return (
-                <div
+                <li
                   key={ recipe[`id${foodOrDrink}`] }
                   data-testid={ `${index}-recipe-card` }
                 >
-                  <img
-                    src={ recipe[`str${foodOrDrink}Thumb`] }
-                    alt="Finished recipe ilustration"
-                    data-testid={ `${index}-card-img` }
-                  />
+                  <button
+                    type="button"
+                    onClick={
+                      () => history.push(`${pathname}/${recipe[`id${foodOrDrink}`]}`)
+                    }
+                  >
+                    <img
+                      src={ recipe[`str${foodOrDrink}Thumb`] }
+                      alt="Finished recipe ilustration"
+                      data-testid={ `${index}-card-img` }
+                    />
+                  </button>
                   <p
                     data-testid={ `${index}-card-name` }
                   >
                     { recipe[`str${foodOrDrink}`] }
                   </p>
 
-                </div>
+                </li>
               );
             }
             return null;
-          }))}
+          })}
+        </ul>
       </section>
     );
   }
@@ -89,6 +112,7 @@ class Meals extends Component {
 const mapStateToProps = (state) => ({
   apiResult: state.filterReducer.apiResult,
   btnSearch: state.filterReducer.btnSearch,
+  apiResultFilter: state.filterReducer.apiResultFilter,
 });
 
 Meals.propTypes = {
@@ -98,6 +122,7 @@ Meals.propTypes = {
     strMealThumb: PropTypes.string,
     idMeal: PropTypes.string,
   })).isRequired,
+  apiResultFilter: PropTypes.array,
 }.isRequired;
 
 export default connect(mapStateToProps)(Meals);

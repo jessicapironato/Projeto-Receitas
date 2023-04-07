@@ -24,6 +24,7 @@ class SearchInput extends Component {
       global.alert('Your search must have only 1 (one) character');
       return false;
     }
+    return true;
   };
 
   apiRequest = async (path) => {

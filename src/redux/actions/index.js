@@ -2,8 +2,9 @@ export const API_FOOD = 'API_FOOD';
 export const API_DRINK = 'API_DRINK';
 export const API_RESULT = 'API_RESULT';
 export const BTN_SEARCH = 'BTN_SEARCH';
-export const API_CLEAR = 'API_CLEAR';
+export const CLEAR_STATE = 'CLEAR_STATE';
 export const CHANGE_SIGNAL = 'CHANGE_SIGNAL';
+export const API_RESULT_FILTER = 'API_RESULT_FILTER';
 
 export const apiFood = (payload, text) => ({
   type: API_FOOD,
@@ -19,11 +20,16 @@ export const requestApi = (payload) => ({
   type: API_RESULT,
   payload,
 });
+export const filterRecipes = (payload) => ({
+  type: API_RESULT_FILTER,
+  payload,
+});
 export const btnSearch = () => ({
   type: BTN_SEARCH,
 });
-export const clearApi = () => ({
-  type: API_CLEAR,
+export const clearState = (nameState) => ({
+  type: CLEAR_STATE,
+  nameState,
 });
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;

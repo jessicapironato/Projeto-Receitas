@@ -58,7 +58,7 @@ class Profile extends Component {
           Logout
         </button>
 
-        <Footer />
+        <Footer history={ history } />
 
       </>
     );
