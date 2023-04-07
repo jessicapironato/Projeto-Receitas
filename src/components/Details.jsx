@@ -47,7 +47,8 @@ class RecipeDetails extends Component {
   };
 
   render() {
-    const { recipeDetails2, imgSrc, nameRecipe, iframe, category, apiCarrocel } = this.props;
+    const { recipeDetails2, history,
+      imgSrc, nameRecipe, iframe, category } = this.props;
     return (
       recipeDetails2.length > 0 ? (
         <section>
@@ -97,7 +98,33 @@ class RecipeDetails extends Component {
               </div>
             ) : null
           ))}
-          {}
+          <nav className="buttonStartRecipe">
+            <button
+              // className="buttonStartRecipe"
+              data-testid="start-recipe-btn"
+              onClick={ () => history.push(`${history.location.pathname}/in-progress`) }
+            >
+              Start Recipe
+
+            </button>
+            <button
+              // className="buttonStartRecipe"
+              data-testid="share-btn"
+              onClick={ () => console.log('funciona compartilhar') }
+            >
+              Share
+
+            </button>
+            <button
+              // className="buttonStartRecipe"
+              data-testid="favorite-btn"
+              onClick={ () => console.log('funciona favoritar') }
+            >
+              Favorite
+
+            </button>
+          </nav>
+
         </section>
       ) : <h1>Loading...</h1>
     );

@@ -9,6 +9,8 @@ import FavoriteRecipesPage from '../pages/FavoriteRecipesPage';
 import Meals from '../pages/Meals';
 import MealsDetails from '../pages/MealsDetails';
 import DrinksDetails from '../pages/DrinksDetails';
+import MealInProgress from '../pages/MealInProgress';
+import DrinkInProgress from '../pages/DrinkInProgress';
 
 class Routes extends Component {
   render() {
@@ -22,8 +24,8 @@ class Routes extends Component {
         <Route exact path="/profile" component={ Profile } />
         <Route exact path="/done-recipes" component={ DoneRecipesPage } />
         <Route exact path="/favorite-recipes" component={ FavoriteRecipesPage } />
-        {/* <Route exact path="/meals/:id-da-receita/in-progress" component={ Recipes } /> */}
-        {/* <Route exact path="/drinks/:id-da-receita/in-progress" component={ Recipes } /> */}
+        <Route exact path="/meals/:id/in-progress" component={ MealInProgress } />
+        <Route exact path="/drinks/:id/in-progress" component={ DrinkInProgress } />
       </Switch>
     );
   }
