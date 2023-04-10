@@ -1,13 +1,38 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import whiteHeart from '../images/whiteHeartIcon.svg';
+import blackHeart from '../images/blackHeartIcon.svg';
 import { recipeDetails } from '../redux/actions';
+import { setFavoriteRecipesOnStorage } from '../services/localStorage';
 
 class RecipeDetails extends Component {
+  state = {
+    favorite: false,
+  };
+
   componentDidMount() {
     const { history } = this.props;
     this.requestApi(history.location.pathname);
   }
+
+  saveOnLocalStorage = ({
+    idMeal, strArea, idDrink,
+    strCategory, strMeal, strMealThumb,
+    strDrink, strDrinkThumb, strAlcoholic }) => {
+    // result
+    const favoriteResult = {
+      id: idMeal || idDrink,
+      type: idMeal ? 'Meal' : 'Drink',
+      nationality: strArea || '',
+      category: strCategory || '',
+      alcoholicOrNot: strAlcoholic || '',
+      name: strMeal || strDrink,
+      image: strDrinkThumb || strMealThumb,
+    };
+    setFavoriteRecipesOnStorage(favoriteResult);
+    // console.log(favoriteResult);
+  };
 
   requestApi = async (pathname) => {
     const { dispatch } = this.props;
@@ -21,12 +46,12 @@ class RecipeDetails extends Component {
     const result = data[foodOrDrink][0];
 
     const arrayUtils = ['idMeal',
-      'strMealThumb', 'strMeal', 'strCategory', 'strInstructions',
+      'strMealThumb', 'strMeal', 'strCategory', 'strInstructions', 'strArea',
       'strSource', 'strDrink', 'idDrink', 'strDrinkThumb', 'strAlcoholic'];
 
     const regexIngredient = /strIngredient/i;
     const regexMeasure = /strMeasure/i;
-    console.log(result);
+    // console.log(result);
     const unInfo = Object.entries(result)
       .filter((key) => arrayUtils.includes(key[0]));
 
@@ -41,14 +66,14 @@ class RecipeDetails extends Component {
         mea.length > 1 ? mea[1] : null));
 
     const newResult = [Object.fromEntries(unInfo), listIngredients, listMeasure];
-
-    console.log(newResult);
+    // console.log(newResult);
     dispatch(recipeDetails(newResult));
   };
 
   render() {
     const { recipeDetails2, history,
       imgSrc, nameRecipe, iframe, category } = this.props;
+    const { favorite } = this.state;
     return (
       recipeDetails2.length > 0 ? (
         <section>
@@ -108,29 +133,22 @@ class RecipeDetails extends Component {
 
             </button>
             <button
-              // className="buttonStartRecipe"
+              // className="buttonShareRecipe"
               data-testid="share-btn"
-              onClick={ () => console.log('funciona compartilhar') }
+              onClick={ () => this.funcao() }
             >
               Share
 
             </button>
             <button
-              // className="buttonStartRecipe"
+              // className="buttonFavoriteRecipe"
               data-testid="favorite-btn"
-              onClick={ () => console.log('funciona favoritar') }
+              onClick={ () => this.saveOnLocalStorage(recipeDetails2[0]) }
             >
-              Favorite
-              
-              
-{/* //     id: id-da-receita,
-//     type: meal-ou-drink,
-//     nationality: nacionalidade-da-receita-ou-texto-vazio,
-//     category: categoria-da-receita-ou-texto-vazio,
-//     alcoholicOrNot: alcoholic-ou-non-alcoholic-ou-texto-vazio,
-//     name: nome-da-receita,
-//     image: imagem-da-receita */}
-
+              <img
+                src={ favorite ? blackHeart : whiteHeart }
+                alt="favorite"
+              />
             </button>
           </nav>
 
