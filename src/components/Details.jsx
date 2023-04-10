@@ -5,13 +5,12 @@ import copy from 'clipboard-copy';
 import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
-import { recipeDetails } from '../redux/actions';
+import { recipeDetails, progressRecipes } from '../redux/actions';
 import {
   modifyFavoriteOnStorage,
   FAVORITE_RECIPES_KEY,
   getKeyOnStorage,
   modifyProgressRecipeOnStorage,
-  IN_PROGRESS_RECIPES_KEY,
 } from '../services/localStorage';
 
 // const copy = require('clipboard-copy');
@@ -19,7 +18,6 @@ import {
 class RecipeDetails extends Component {
   state = {
     favorite: false,
-    progress: false,
     copyText: false,
   };
 
@@ -27,28 +25,39 @@ class RecipeDetails extends Component {
     const { history: { location: { pathname } } } = this.props;
     this.requestApi(pathname);
     const idRecipes = pathname.replace(/[^0-9]/g, '');
-    const foodOrDrink = pathname === `/meals/${idRecipes}` ? 'meals' : 'drinks';
     const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY);
     const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
       .some((recipe) => recipe.id === idRecipes) : false;
-    const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
-    // console.log(atualStorageProgress);
-    const beOrNotBeProgress = atualStorageProgress
-      ? Object.values(atualStorageProgress[foodOrDrink])
-        .some((recipe) => recipe.id === idRecipes)
-      : false;
-    this.setState({ favorite: beOrNotBeFavorite, progress: beOrNotBeProgress });
+    this.setState({ favorite: beOrNotBeFavorite });
   }
+
+  idPathname = (pathname) => {
+    const idRecipes = pathname.replace(/[^0-9]/g, '');
+    const foodOrDrink = pathname === `/meals/${idRecipes}` ? 'meals' : 'drinks';
+    return { idRecipes, foodOrDrink };
+  };
+
+  dispatchProgressRecipes = (pathname) => {
+    const { dispatch } = this.props;
+    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
+    // const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
+    // const result = atualStorageProgress
+    //   ? Object.values(atualStorageProgress[foodOrDrink])
+    //     .some((recipe) => recipe.id === idRecipes)
+    //   : false;
+    // if (result) {
+    dispatch(progressRecipes(idRecipes, foodOrDrink));
+    // }
+  };
 
   requestApi = async (pathname) => {
     const { dispatch } = this.props;
-    const idRecipes = pathname.replace(/[^0-9]/g, '');
+    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
     const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idRecipes}`;
     const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idRecipes}`;
     const urlApi = pathname === `/meals/${idRecipes}` ? urlMeals : urlDrinks;
     const response = await fetch(urlApi);
     const data = await response.json();
-    const foodOrDrink = pathname === `/meals/${idRecipes}` ? 'meals' : 'drinks';
     const result = data[foodOrDrink][0];
 
     const arrayUtils = ['idMeal',
@@ -74,16 +83,11 @@ class RecipeDetails extends Component {
     dispatch(recipeDetails(newResult));
   };
 
-  // funcao = async (string) => {
-  //   const tentativa = await copy(string);
-  //   const tent = await tentativa.json();
-  //   console.log(tent);
-  // };
-
   render() {
     const { recipeDetails2, history,
-      imgSrc, nameRecipe, iframe, category } = this.props;
-    const { favorite, copyText, progress } = this.state;
+      imgSrc, nameRecipe, iframe, category, progressRecipes2 } = this.props;
+    const { favorite, copyText } = this.state;
+    const { idRecipes, foodOrDrink } = this.idPathname(history.location.pathname);
     return (
       recipeDetails2.length > 0 ? (
         <section>
@@ -140,12 +144,15 @@ class RecipeDetails extends Component {
             className="buttonStartRecipe"
             data-testid="start-recipe-btn"
             onClick={ () => {
+              this.dispatchProgressRecipes(history.location.pathname);
               modifyProgressRecipeOnStorage(recipeDetails2[0], recipeDetails2[1]);
               history.push(`${history.location.pathname}/in-progress`);
             } }
           >
-            { progress ? 'Continue Recipe' : 'Start Recipe'}
-
+            {
+              progressRecipes2[foodOrDrink]
+                .some((id) => id === idRecipes) ? 'Continue Recipe' : 'Start Recipe'
+            }
           </button>
 
           <div className="buttonsTopRecipe">
@@ -153,7 +160,6 @@ class RecipeDetails extends Component {
               className="buttonShareRecipe"
               // data-testid="share-btn"
               onClick={ () => {
-                console.log(history);
                 copy(`http://localhost:3000${history.location.pathname}`);
                 this.setState({ copyText: true });
               } }
@@ -194,6 +200,7 @@ RecipeDetails.propTypes = {
 const mapStateToProps = (state) => ({
   recipeDetails2: state.filterReducer.recipeDetails,
   apiCarrocel: state.filterReducer.apiCarrocel,
+  progressRecipes2: state.recipesReducer.progressRecipes,
 });
 
 export default connect(mapStateToProps)(RecipeDetails);

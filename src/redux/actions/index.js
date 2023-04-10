@@ -3,7 +3,7 @@ export const API_DRINK = 'API_DRINK';
 export const API_RESULT = 'API_RESULT';
 export const BTN_SEARCH = 'BTN_SEARCH';
 export const CLEAR_STATE = 'CLEAR_STATE';
-export const CHANGE_SIGNAL = 'CHANGE_SIGNAL';
+export const IN_PROGRESS_RECIPES = 'IN_PROGRESS_RECIPES';
 export const API_CARROCEL = 'API_CARROCEL';
 export const API_RESULT_FILTER = 'API_RESULT_FILTER';
 export const RECIPE_DETAILS = 'RECIPE_DETAILS';
@@ -40,6 +40,11 @@ export const recipeDetails = (payload) => ({
 export const apiCarrocel = (payload) => ({
   type: API_CARROCEL,
   payload,
+});
+export const progressRecipes = (idRecipe, mealOrDrink) => ({
+  type: IN_PROGRESS_RECIPES,
+  idRecipe,
+  mealOrDrink,
 });
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
