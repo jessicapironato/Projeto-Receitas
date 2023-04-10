@@ -29,6 +29,7 @@ class Footer extends Component {
             />
           </button>
           <button
+            className=""
             type="button"
             onClick={ () => {
               dispatch(clearState('apiResult'));
