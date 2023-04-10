@@ -43,7 +43,7 @@ class Login extends Component {
 
     const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
     // const regex = /[a-z0-9]/i;
-    const passwordMinSize = 6;
+    const passwordMinSize = 7;
 
     return (
       <form className="container-login">
