@@ -66,15 +66,15 @@ export const modifyDoneRecipeOnStorage = ({
   const arrayTags = [];
 
   const doneResult = {
-    id: idMeal || idDrink,
-    type: idMeal ? 'meal' : 'drink',
-    nationality: strArea || '',
-    category: strCategory || '',
-    alcoholicOrNot: strAlcoholic || '',
-    name: strMeal || strDrink,
-    image: strDrinkThumb || strMealThumb,
-    tags: arrayTags || [],
-    doneDate: '',
+    id: idMeal || idDrink, // id da receita
+    type: idMeal ? 'meal' : 'drink', // meal ou drink
+    nationality: strArea || '', // nacionalidade da receita ou texto vazio
+    category: strCategory || '', // categoria da receita ou texto vazio
+    alcoholicOrNot: strAlcoholic || '', // alcólico ou não alcólico ou texto vazio
+    name: strMeal || strDrink, // nome da receita
+    image: strDrinkThumb || strMealThumb, // imagem da receita
+    tags: arrayTags || [], // array de tags da receita ou array vazio
+    doneDate: '', // quando a receita foi concluída
   };
   const atualStorage = getKeyOnStorage(DONE_RECIPES_KEY);
   if (atualStorage) {
@@ -85,28 +85,6 @@ export const modifyDoneRecipeOnStorage = ({
 };
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
-// doneRecipes
-// [{
-//   id: id-da-receita,
-//   type: meal-ou-drink,
-//   nationality: nacionalidade-da-receita-ou-texto-vazio,
-//   category: categoria-da-receita-ou-texto-vazio,
-//   alcoholicOrNot: alcoholic-ou-non-alcoholic-ou-texto-vazio,
-//   name: nome-da-receita,
-//   image: imagem-da-receita,
-//   doneDate: quando-a-receita-foi-concluida,
-//   tags: array-de-tags-da-receita-ou-array-vazio
-// }]
-// favoriteRecipes
-// [{
-//     id: id-da-receita,
-//     type: meal-ou-drink,
-//     nationality: nacionalidade-da-receita-ou-texto-vazio,
-//     category: categoria-da-receita-ou-texto-vazio,
-//     alcoholicOrNot: alcoholic-ou-non-alcoholic-ou-texto-vazio,
-//     name: nome-da-receita,
-//     image: imagem-da-receita
-// }]
 // inProgressRecipes
 // {
 //   drinks: {

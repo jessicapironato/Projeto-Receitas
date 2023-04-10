@@ -17,7 +17,7 @@ import {
 class RecipeDetails extends Component {
   state = {
     favorite: false,
-    copyText: '',
+    // copyText: '',
   };
 
   componentDidMount() {
@@ -72,7 +72,7 @@ class RecipeDetails extends Component {
   render() {
     const { recipeDetails2, history,
       imgSrc, nameRecipe, iframe, category } = this.props;
-    const { favorite, copyText } = this.state;
+    const { favorite } = this.state;
     return (
       recipeDetails2.length > 0 ? (
         <section>
@@ -142,7 +142,7 @@ class RecipeDetails extends Component {
                 copy(history.location.pathname) // está setando o history no estado local, mas não estamos entendendo o que está fazendo a função copy
                   .then((data) => console.log(data))
                   .catch((erro) => console.log(erro.message)); // tentativa de encontrar o erro do undefined
-                this.setState({ copyText: history.location.pathname });
+                // this.setState({ copyText: history.location.pathname });
               } }
             >
               <img
