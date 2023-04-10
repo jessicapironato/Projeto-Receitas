@@ -5,13 +5,7 @@ import Footer from '../components/Footer';
 import { getUserOnStorage } from '../services/localStorage';
 
 class Profile extends Component {
-  getLocalStorageUSer = () => {
-    const userEmail = getUserOnStorage();
-    if (userEmail) {
-      return userEmail.email;
-    }
-    return '';
-  };
+  getLocalStorageUSer = () => getUserOnStorage().email;
 
   logoutUser = () => {
     const { history } = this.props;
