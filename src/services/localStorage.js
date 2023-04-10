@@ -30,6 +30,60 @@ export const modifyUserOnStorage = (property, newValue) => {
   setUserOnStorage(user);
 };
 
+export const modifyFavoriteOnStorage = ({
+  idMeal, strArea, idDrink,
+  strCategory, strMeal, strMealThumb,
+  strDrink, strDrinkThumb, strAlcoholic }) => {
+  // result
+  const favoriteResult = {
+    id: idMeal || idDrink,
+    type: idMeal ? 'meal' : 'drink',
+    nationality: strArea || '',
+    category: strCategory || '',
+    alcoholicOrNot: strAlcoholic || '',
+    name: strMeal || strDrink,
+    image: strDrinkThumb || strMealThumb,
+  };
+  const atualStorage = getKeyOnStorage(FAVORITE_RECIPES_KEY);
+  if (atualStorage) {
+    const isFavorite = atualStorage.some((recipe) => recipe.id === favoriteResult.id);
+    if (isFavorite) {
+      const newStorage = atualStorage
+        .filter((recipe) => recipe.name !== favoriteResult.name);
+      setFavoriteRecipesOnStorage([...newStorage]);
+    } else {
+      setFavoriteRecipesOnStorage([...atualStorage, favoriteResult]);
+    }
+  } else {
+    setFavoriteRecipesOnStorage([favoriteResult]);
+  }
+};
+
+export const modifyDoneRecipeOnStorage = ({
+  idMeal, strArea, idDrink,
+  strCategory, strMeal, strMealThumb,
+  strDrink, strDrinkThumb, strAlcoholic }) => {
+  const arrayTags = [];
+
+  const doneResult = {
+    id: idMeal || idDrink,
+    type: idMeal ? 'meal' : 'drink',
+    nationality: strArea || '',
+    category: strCategory || '',
+    alcoholicOrNot: strAlcoholic || '',
+    name: strMeal || strDrink,
+    image: strDrinkThumb || strMealThumb,
+    tags: arrayTags || [],
+    doneDate: '',
+  };
+  const atualStorage = getKeyOnStorage(DONE_RECIPES_KEY);
+  if (atualStorage) {
+    setDoneRecipesOnStorage([...atualStorage, doneResult]);
+  } else {
+    setDoneRecipesOnStorage([doneResult]);
+  }
+};
+
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
 // doneRecipes
 // [{

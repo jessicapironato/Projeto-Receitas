@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import copy from 'clipboard-copy';
 import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import { recipeDetails } from '../redux/actions';
 import {
-  setFavoriteRecipesOnStorage,
+  modifyFavoriteOnStorage,
   FAVORITE_RECIPES_KEY,
   getKeyOnStorage,
 } from '../services/localStorage';
 
-const copy = require('clipboard-copy');
+// const copy = require('clipboard-copy');
 
 class RecipeDetails extends Component {
   state = {
     favorite: false,
+    copyText: '',
   };
 
   componentDidMount() {
@@ -26,35 +28,6 @@ class RecipeDetails extends Component {
     console.log(beOrNotBe);
     this.setState({ favorite: beOrNotBe });
   }
-
-  saveOnLocalStorage = ({
-    idMeal, strArea, idDrink,
-    strCategory, strMeal, strMealThumb,
-    strDrink, strDrinkThumb, strAlcoholic }) => {
-    // result
-    const favoriteResult = {
-      id: idMeal || idDrink,
-      type: idMeal ? 'meal' : 'drink',
-      nationality: strArea || '',
-      category: strCategory || '',
-      alcoholicOrNot: strAlcoholic || '',
-      name: strMeal || strDrink,
-      image: strDrinkThumb || strMealThumb,
-    };
-    const atualStorage = getKeyOnStorage(FAVORITE_RECIPES_KEY);
-    if (atualStorage) {
-      const isFavorite = atualStorage.some((recipe) => recipe.id === favoriteResult.id);
-      if (isFavorite) {
-        const newStorage = atualStorage
-          .filter((recipe) => recipe.name !== favoriteResult.name);
-        setFavoriteRecipesOnStorage([...newStorage]);
-      } else {
-        setFavoriteRecipesOnStorage([...atualStorage, favoriteResult]);
-      }
-    } else {
-      setFavoriteRecipesOnStorage([favoriteResult]);
-    }
-  };
 
   requestApi = async (pathname) => {
     const { dispatch } = this.props;
@@ -90,16 +63,16 @@ class RecipeDetails extends Component {
     dispatch(recipeDetails(newResult));
   };
 
-  funcao = async (string) => {
-    const tentativa = await copy(string);
-    const tent = await tentativa.json();
-    console.log(tent);
-  };
+  // funcao = async (string) => {
+  //   const tentativa = await copy(string);
+  //   const tent = await tentativa.json();
+  //   console.log(tent);
+  // };
 
   render() {
     const { recipeDetails2, history,
       imgSrc, nameRecipe, iframe, category } = this.props;
-    const { favorite } = this.state;
+    const { favorite, copyText } = this.state;
     return (
       recipeDetails2.length > 0 ? (
         <section>
@@ -126,7 +99,7 @@ class RecipeDetails extends Component {
             />
           )}
 
-          {copy && <h1>{copy}</h1>}
+          {/* {copyText && <h1>{copyText}</h1>} */}
 
           { recipeDetails2[1].map((detail, index) => (
             // O index na key pode dar muitos erros
@@ -165,7 +138,12 @@ class RecipeDetails extends Component {
             <button
               className="buttonShareRecipe"
               // data-testid="share-btn"
-              onClick={ () => this.funcao('This is some cool text') }
+              onClick={ () => {
+                copy(history.location.pathname) // está setando o history no estado local, mas não estamos entendendo o que está fazendo a função copy
+                  .then((data) => console.log(data))
+                  .catch((erro) => console.log(erro.message)); // tentativa de encontrar o erro do undefined
+                this.setState({ copyText: history.location.pathname });
+              } }
             >
               <img
                 data-testid="share-btn"
@@ -179,7 +157,7 @@ class RecipeDetails extends Component {
               className="buttonFavoriteRecipe"
               onClick={ () => {
                 this.setState((initial) => ({ favorite: !initial.favorite }));
-                this.saveOnLocalStorage(recipeDetails2[0]);
+                modifyFavoriteOnStorage(recipeDetails2[0]);
               } }
             >
               <img
