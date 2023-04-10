@@ -3,8 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
 import { recipeDetails } from '../redux/actions';
-import { setFavoriteRecipesOnStorage } from '../services/localStorage';
+import {
+  setFavoriteRecipesOnStorage,
+  FAVORITE_RECIPES_KEY,
+  getKeyOnStorage,
+} from '../services/localStorage';
+
+const copy = require('clipboard-copy');
 
 class RecipeDetails extends Component {
   state = {
@@ -12,8 +19,12 @@ class RecipeDetails extends Component {
   };
 
   componentDidMount() {
-    const { history } = this.props;
-    this.requestApi(history.location.pathname);
+    const { history: { location: { pathname } } } = this.props;
+    this.requestApi(pathname);
+    const atualStorage = getKeyOnStorage(FAVORITE_RECIPES_KEY);
+    const beOrNotBe = atualStorage ? atualStorage.some((recipe) => recipe.id === pathname.replace(/[^0-9]/g, '')) : false;
+    console.log(beOrNotBe);
+    this.setState({ favorite: beOrNotBe });
   }
 
   saveOnLocalStorage = ({
@@ -23,15 +34,26 @@ class RecipeDetails extends Component {
     // result
     const favoriteResult = {
       id: idMeal || idDrink,
-      type: idMeal ? 'Meal' : 'Drink',
+      type: idMeal ? 'meal' : 'drink',
       nationality: strArea || '',
       category: strCategory || '',
       alcoholicOrNot: strAlcoholic || '',
       name: strMeal || strDrink,
       image: strDrinkThumb || strMealThumb,
     };
-    setFavoriteRecipesOnStorage(favoriteResult);
-    // console.log(favoriteResult);
+    const atualStorage = getKeyOnStorage(FAVORITE_RECIPES_KEY);
+    if (atualStorage) {
+      const isFavorite = atualStorage.some((recipe) => recipe.id === favoriteResult.id);
+      if (isFavorite) {
+        const newStorage = atualStorage
+          .filter((recipe) => recipe.name !== favoriteResult.name);
+        setFavoriteRecipesOnStorage([...newStorage]);
+      } else {
+        setFavoriteRecipesOnStorage([...atualStorage, favoriteResult]);
+      }
+    } else {
+      setFavoriteRecipesOnStorage([favoriteResult]);
+    }
   };
 
   requestApi = async (pathname) => {
@@ -51,7 +73,6 @@ class RecipeDetails extends Component {
 
     const regexIngredient = /strIngredient/i;
     const regexMeasure = /strMeasure/i;
-    // console.log(result);
     const unInfo = Object.entries(result)
       .filter((key) => arrayUtils.includes(key[0]));
 
@@ -66,8 +87,13 @@ class RecipeDetails extends Component {
         mea.length > 1 ? mea[1] : null));
 
     const newResult = [Object.fromEntries(unInfo), listIngredients, listMeasure];
-    // console.log(newResult);
     dispatch(recipeDetails(newResult));
+  };
+
+  funcao = async (string) => {
+    const tentativa = await copy(string);
+    const tent = await tentativa.json();
+    console.log(tent);
   };
 
   render() {
@@ -99,6 +125,9 @@ class RecipeDetails extends Component {
               title="Embedded youtube"
             />
           )}
+
+          {copy && <h1>{copy}</h1>}
+
           { recipeDetails2[1].map((detail, index) => (
             // O index na key pode dar muitos erros
             detail.length > 1 ? (
@@ -123,34 +152,43 @@ class RecipeDetails extends Component {
               </div>
             ) : null
           ))}
-          <nav className="buttonStartRecipe">
-            <button
-              // className="buttonStartRecipe"
-              data-testid="start-recipe-btn"
-              onClick={ () => history.push(`${history.location.pathname}/in-progress`) }
-            >
-              Start Recipe
+          <button
+            className="buttonStartRecipe"
+            data-testid="start-recipe-btn"
+            onClick={ () => history.push(`${history.location.pathname}/in-progress`) }
+          >
+            Start Recipe
 
-            </button>
-            <button
-              // className="buttonShareRecipe"
-              data-testid="share-btn"
-              onClick={ () => this.funcao() }
-            >
-              Share
+          </button>
 
-            </button>
+          <div className="buttonsTopRecipe">
             <button
-              // className="buttonFavoriteRecipe"
-              data-testid="favorite-btn"
-              onClick={ () => this.saveOnLocalStorage(recipeDetails2[0]) }
+              className="buttonShareRecipe"
+              // data-testid="share-btn"
+              onClick={ () => this.funcao('This is some cool text') }
             >
               <img
+                data-testid="share-btn"
+                src={ shareIcon }
+                alt="share"
+              />
+            </button>
+
+            <button
+              type="button"
+              className="buttonFavoriteRecipe"
+              onClick={ () => {
+                this.setState((initial) => ({ favorite: !initial.favorite }));
+                this.saveOnLocalStorage(recipeDetails2[0]);
+              } }
+            >
+              <img
+                data-testid="favorite-btn"
                 src={ favorite ? blackHeart : whiteHeart }
                 alt="favorite"
               />
             </button>
-          </nav>
+          </div>
 
         </section>
       ) : <h1>Loading...</h1>
