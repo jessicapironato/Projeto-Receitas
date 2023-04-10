@@ -10,6 +10,8 @@ import {
   modifyFavoriteOnStorage,
   FAVORITE_RECIPES_KEY,
   getKeyOnStorage,
+  modifyProgressRecipeOnStorage,
+  IN_PROGRESS_RECIPES_KEY,
 } from '../services/localStorage';
 
 // const copy = require('clipboard-copy');
@@ -17,16 +19,25 @@ import {
 class RecipeDetails extends Component {
   state = {
     favorite: false,
-    // copyText: '',
+    progress: false,
+    copyText: false,
   };
 
   componentDidMount() {
     const { history: { location: { pathname } } } = this.props;
     this.requestApi(pathname);
-    const atualStorage = getKeyOnStorage(FAVORITE_RECIPES_KEY);
-    const beOrNotBe = atualStorage ? atualStorage.some((recipe) => recipe.id === pathname.replace(/[^0-9]/g, '')) : false;
-    console.log(beOrNotBe);
-    this.setState({ favorite: beOrNotBe });
+    const idRecipes = pathname.replace(/[^0-9]/g, '');
+    const foodOrDrink = pathname === `/meals/${idRecipes}` ? 'meals' : 'drinks';
+    const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY);
+    const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
+      .some((recipe) => recipe.id === idRecipes) : false;
+    const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
+    // console.log(atualStorageProgress);
+    const beOrNotBeProgress = atualStorageProgress
+      ? Object.values(atualStorageProgress[foodOrDrink])
+        .some((recipe) => recipe.id === idRecipes)
+      : false;
+    this.setState({ favorite: beOrNotBeFavorite, progress: beOrNotBeProgress });
   }
 
   requestApi = async (pathname) => {
@@ -72,7 +83,7 @@ class RecipeDetails extends Component {
   render() {
     const { recipeDetails2, history,
       imgSrc, nameRecipe, iframe, category } = this.props;
-    const { favorite } = this.state;
+    const { favorite, copyText, progress } = this.state;
     return (
       recipeDetails2.length > 0 ? (
         <section>
@@ -99,7 +110,7 @@ class RecipeDetails extends Component {
             />
           )}
 
-          {/* {copyText && <h1>{copyText}</h1>} */}
+          {copyText && <span>Link copied!</span>}
 
           { recipeDetails2[1].map((detail, index) => (
             // O index na key pode dar muitos erros
@@ -128,9 +139,12 @@ class RecipeDetails extends Component {
           <button
             className="buttonStartRecipe"
             data-testid="start-recipe-btn"
-            onClick={ () => history.push(`${history.location.pathname}/in-progress`) }
+            onClick={ () => {
+              modifyProgressRecipeOnStorage(recipeDetails2[0], recipeDetails2[1]);
+              history.push(`${history.location.pathname}/in-progress`);
+            } }
           >
-            Start Recipe
+            { progress ? 'Continue Recipe' : 'Start Recipe'}
 
           </button>
 
@@ -139,10 +153,9 @@ class RecipeDetails extends Component {
               className="buttonShareRecipe"
               // data-testid="share-btn"
               onClick={ () => {
-                copy(history.location.pathname) // está setando o history no estado local, mas não estamos entendendo o que está fazendo a função copy
-                  .then((data) => console.log(data))
-                  .catch((erro) => console.log(erro.message)); // tentativa de encontrar o erro do undefined
-                // this.setState({ copyText: history.location.pathname });
+                console.log(history);
+                copy(`http://localhost:3000${history.location.pathname}`);
+                this.setState({ copyText: true });
               } }
             >
               <img

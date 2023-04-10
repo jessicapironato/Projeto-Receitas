@@ -84,6 +84,25 @@ export const modifyDoneRecipeOnStorage = ({
   }
 };
 
+export const modifyProgressRecipeOnStorage = ({
+  idMeal, idDrink }, ingredients) => {
+  const id = idMeal || idDrink;
+  const mealOrDrink = id === idDrink ? 'drinks' : 'meals';
+  const notmealOrDrink = id === idDrink ? 'meals' : 'drinks';
+  const progressResult = {
+    [id]: [...ingredients],
+  };
+  const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
+  if (atualStorage) {
+    setInProgressRecipesOnStorage({ ...atualStorage,
+      [mealOrDrink]: { ...atualStorage[mealOrDrink], ...progressResult } });
+    // {...localStorageAtual, drinks: {...drinks, ...progressResult} }
+  } else {
+    setInProgressRecipesOnStorage({ [mealOrDrink]: progressResult,
+      [notmealOrDrink]: {} });
+  }
+};
+
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
 // inProgressRecipes
 // {
