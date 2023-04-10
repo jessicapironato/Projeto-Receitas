@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { getUserOnStorage } from '../services/localStorage';
+import { getKeyOnStorage, USER_KEY } from '../services/localStorage';
 
 class Profile extends Component {
   getLocalStorageUSer = () => {
-    const userEmail = getUserOnStorage();
+    const userEmail = getKeyOnStorage(USER_KEY);
     if (userEmail) {
       return userEmail.email;
     }

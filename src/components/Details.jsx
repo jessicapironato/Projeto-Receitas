@@ -121,6 +121,15 @@ class RecipeDetails extends Component {
               onClick={ () => console.log('funciona favoritar') }
             >
               Favorite
+              
+              
+{/* //     id: id-da-receita,
+//     type: meal-ou-drink,
+//     nationality: nacionalidade-da-receita-ou-texto-vazio,
+//     category: categoria-da-receita-ou-texto-vazio,
+//     alcoholicOrNot: alcoholic-ou-non-alcoholic-ou-texto-vazio,
+//     name: nome-da-receita,
+//     image: imagem-da-receita */}
 
             </button>
           </nav>
