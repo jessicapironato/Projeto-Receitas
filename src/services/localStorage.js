@@ -62,9 +62,7 @@ export const modifyFavoriteOnStorage = ({
 export const modifyDoneRecipeOnStorage = ({
   idMeal, strArea, idDrink,
   strCategory, strMeal, strMealThumb,
-  strDrink, strDrinkThumb, strAlcoholic }) => {
-  const arrayTags = [];
-
+  strDrink, strDrinkThumb, strAlcoholic, strTags }, doneDate) => {
   const doneResult = {
     id: idMeal || idDrink, // id da receita
     type: idMeal ? 'meal' : 'drink', // meal ou drink
@@ -73,8 +71,8 @@ export const modifyDoneRecipeOnStorage = ({
     alcoholicOrNot: strAlcoholic || '', // alcólico ou não alcólico ou texto vazio
     name: strMeal || strDrink, // nome da receita
     image: strDrinkThumb || strMealThumb, // imagem da receita
-    tags: arrayTags || [], // array de tags da receita ou array vazio
-    doneDate: '', // quando a receita foi concluída
+    tags: (strTags && strTags.split(',')) || [], // array de tags da receita ou array vazio
+    doneDate, // quando a receita foi concluída
   };
   const atualStorage = getKeyOnStorage(DONE_RECIPES_KEY);
   if (atualStorage) {

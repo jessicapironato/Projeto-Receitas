@@ -1,19 +1,43 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {
+  modifyDoneRecipeOnStorage,
+  DONE_RECIPES_KEY,
+  getKeyOnStorage,
+} from '../services/localStorage';
 
 class RecipeInProgress extends Component {
   render() {
-    // const { nameState } = this.props;
+    const { recipeDetails } = this.props;
     return (
-      <h1>em Construção</h1>
+      <div>
+        <button
+          type="button"
+          onClick={ () => modifyDoneRecipeOnStorage(
+            recipeDetails[0],
+            new Date().toDateString(),
+          ) }
+        >
+          Finish Recipe
+
+        </button>
+        {console.log(getKeyOnStorage(DONE_RECIPES_KEY))}
+      </div>
+
     );
   }
 }
 
-// RecipeInProgress.propTypes = {
-//   nameState: PropTypes.string,
-// }.isRequired;
+RecipeInProgress.propTypes = {
+  recipeDetails: PropTypes.object,
+}.isRequired;
 
-export default RecipeInProgress;
+const mapStateToProps = (state) => ({
+  recipeDetails: state.filterReducer.recipeDetails,
+  progressRecipes: state.recipesReducer.progressRecipes,
+});
+
+export default connect(mapStateToProps)(RecipeInProgress);
 
 // Requisitos 31 e 32: Jéssica e Gregório;

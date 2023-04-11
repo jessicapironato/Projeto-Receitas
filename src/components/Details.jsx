@@ -9,7 +9,9 @@ import { recipeDetails, progressRecipes } from '../redux/actions';
 import {
   modifyFavoriteOnStorage,
   FAVORITE_RECIPES_KEY,
+  IN_PROGRESS_RECIPES_KEY,
   getKeyOnStorage,
+  DONE_RECIPES_KEY,
   modifyProgressRecipeOnStorage,
 } from '../services/localStorage';
 
@@ -19,22 +21,34 @@ class RecipeDetails extends Component {
   state = {
     favorite: false,
     copyText: false,
+    progress: false,
+    done: false,
   };
 
   componentDidMount() {
     const { history: { location: { pathname } } } = this.props;
     this.requestApi(pathname);
-    const idRecipes = pathname.replace(/[^0-9]/g, '');
-    const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY);
+    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
+    const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY) || undefined;
     const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
       .some((recipe) => recipe.id === idRecipes) : false;
-    this.setState({ favorite: beOrNotBeFavorite });
+
+    const atualStorageDone = getKeyOnStorage(DONE_RECIPES_KEY) || undefined;
+    const beOrNotBeDone = atualStorageDone ? atualStorageDone
+      .some((recipe) => recipe.id === idRecipes) : false;
+
+    const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || undefined;
+    const result = atualStorageProgress
+      ? Object.keys(atualStorageProgress[foodOrDrink]).includes(idRecipes)
+      : false;
+    this.setState({ favorite: beOrNotBeFavorite, progress: result, done: beOrNotBeDone });
   }
 
   idPathname = (pathname) => {
     const idRecipes = pathname.replace(/[^0-9]/g, '');
     const foodOrDrink = pathname === `/meals/${idRecipes}` ? 'meals' : 'drinks';
-    return { idRecipes, foodOrDrink };
+    const teste = { idRecipes, foodOrDrink };
+    return teste;
   };
 
   dispatchProgressRecipes = (pathname) => {
@@ -58,11 +72,12 @@ class RecipeDetails extends Component {
     const urlApi = pathname === `/meals/${idRecipes}` ? urlMeals : urlDrinks;
     const response = await fetch(urlApi);
     const data = await response.json();
+    console.log(data);
     const result = data[foodOrDrink][0];
 
     const arrayUtils = ['idMeal',
       'strMealThumb', 'strMeal', 'strCategory', 'strInstructions', 'strArea',
-      'strSource', 'strDrink', 'idDrink', 'strDrinkThumb', 'strAlcoholic'];
+      'strSource', 'strDrink', 'idDrink', 'strDrinkThumb', 'strAlcoholic', 'strTags'];
 
     const regexIngredient = /strIngredient/i;
     const regexMeasure = /strMeasure/i;
@@ -85,9 +100,8 @@ class RecipeDetails extends Component {
 
   render() {
     const { recipeDetails2, history,
-      imgSrc, nameRecipe, iframe, category, progressRecipes2 } = this.props;
-    const { favorite, copyText } = this.state;
-    const { idRecipes, foodOrDrink } = this.idPathname(history.location.pathname);
+      imgSrc, nameRecipe, iframe, category } = this.props;
+    const { favorite, copyText, progress, done } = this.state;
     return (
       recipeDetails2.length > 0 ? (
         <section>
@@ -140,20 +154,22 @@ class RecipeDetails extends Component {
               </div>
             ) : null
           ))}
-          <button
-            className="buttonStartRecipe"
-            data-testid="start-recipe-btn"
-            onClick={ () => {
-              this.dispatchProgressRecipes(history.location.pathname);
-              modifyProgressRecipeOnStorage(recipeDetails2[0], recipeDetails2[1]);
-              history.push(`${history.location.pathname}/in-progress`);
-            } }
-          >
-            {
-              progressRecipes2[foodOrDrink]
-                .some((id) => id === idRecipes) ? 'Continue Recipe' : 'Start Recipe'
-            }
-          </button>
+          {!done && (
+            <button
+              type="button"
+              className="buttonStartRecipe"
+              data-testid="start-recipe-btn"
+              onClick={ () => {
+                this.dispatchProgressRecipes(history.location.pathname);
+                modifyProgressRecipeOnStorage(recipeDetails2[0], recipeDetails2[1]);
+                history.push(`${history.location.pathname}/in-progress`);
+              } }
+            >
+              {
+                progress ? 'Continue Recipe' : 'Start Recipe'
+              }
+            </button>
+          )}
 
           <div className="buttonsTopRecipe">
             <button
