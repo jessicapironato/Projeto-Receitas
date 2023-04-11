@@ -232,5 +232,5 @@ describe('Testes Login', () => {
   });
 });
 
-// // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
-// // Requisito 12-15: Pair Programming André Porto,Gregório Bezerra
+// Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
+// Requisito 12-15: Pair Programming André Porto,Gregório Bezerra
