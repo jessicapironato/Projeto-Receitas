@@ -27,6 +27,9 @@ export const getKeyOnStorage = (key) => {
 export const getUserOnStorage = () => JSON.parse(localStorage
   .getItem(USER_KEY)) || USER_NULL;
 
+export const getUserOnStorage = () => JSON.parse(localStorage
+  .getItem(USER_KEY)) || USER_NULL;
+
 export const modifyUserOnStorage = (property, newValue) => {
   const user = getKeyOnStorage(USER_KEY);
   user[property] = newValue;
