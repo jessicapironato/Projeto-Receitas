@@ -1,13 +1,12 @@
 const USER_KEY = 'user';
+const USER_NULL = { email: '' };
 
 export const setUserOnStorage = (user) => {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 };
 
-export const getUserOnStorage = () => {
-  const user = localStorage.getItem(USER_KEY);
-  return JSON.parse(user);
-};
+export const getUserOnStorage = () => JSON.parse(localStorage
+  .getItem(USER_KEY)) || USER_NULL;
 
 export const modifyUserOnStorage = (property, newValue) => {
   const user = getUserOnStorage();

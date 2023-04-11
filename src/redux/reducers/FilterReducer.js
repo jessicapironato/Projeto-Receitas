@@ -1,5 +1,5 @@
-import { API_DRINK, API_FOOD, API_RESULT, BTN_SEARCH, CLEAR_STATE,
-  API_RESULT_FILTER } from '../actions';
+import { API_DRINK, API_FOOD, API_RESULT, BTN_SEARCH, CLEAR_STATE, RECIPE_DETAILS,
+  API_RESULT_FILTER, API_CARROCEL } from '../actions';
 
 const INITIAL_STATE = {
   apiFood: {},
@@ -7,6 +7,8 @@ const INITIAL_STATE = {
   apiResult: [],
   btnSearch: false,
   apiResultFilter: [],
+  recipeDetails: [],
+  apiCarrocel: [],
 };
 
 const filterReducer = (state = INITIAL_STATE, action) => {
@@ -45,6 +47,16 @@ const filterReducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       [action.nameState]: [],
+    };
+  case RECIPE_DETAILS:
+    return {
+      ...state,
+      recipeDetails: action.payload,
+    };
+  case API_CARROCEL:
+    return {
+      ...state,
+      apiCarrocel: action.payload,
     };
 
   default:

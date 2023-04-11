@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Header from '../components/Header';
+import RecipeDetails from '../components/RecipeDetails';
 
 class MealsDetails extends Component {
   render() {
@@ -8,6 +9,7 @@ class MealsDetails extends Component {
     return (
       <>
         <Header title="MealsDetails" history={ history } />
+        <RecipeDetails history={ history } />
         <h1>Receitas</h1>
       </>
     );
