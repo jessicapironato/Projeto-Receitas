@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import userReducer from './UserReducer';
+import recipesReducer from './RecipesReducer';
 import filterReducer from './FilterReducer';
 
 // const INITIAL_STATE = {};
@@ -10,7 +10,7 @@ import filterReducer from './FilterReducer';
 //   }
 // };
 const rootReducer = combineReducers({
-  userReducer,
+  recipesReducer,
   filterReducer,
 });
 

@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import { getUserOnStorage } from '../services/localStorage';
 
 class Profile extends Component {
+
   getLocalStorageUSer = () => getUserOnStorage().email;
 
   logoutUser = () => {

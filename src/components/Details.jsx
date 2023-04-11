@@ -1,32 +1,85 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { recipeDetails } from '../redux/actions';
+import copy from 'clipboard-copy';
+import whiteHeart from '../images/whiteHeartIcon.svg';
+import blackHeart from '../images/blackHeartIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
+import { recipeDetails, progressRecipes } from '../redux/actions';
+import {
+  modifyFavoriteOnStorage,
+  FAVORITE_RECIPES_KEY,
+  IN_PROGRESS_RECIPES_KEY,
+  getKeyOnStorage,
+  DONE_RECIPES_KEY,
+  modifyProgressRecipeOnStorage,
+} from '../services/localStorage';
+
+// const copy = require('clipboard-copy');
 
 class RecipeDetails extends Component {
+  state = {
+    favorite: false,
+    copyText: false,
+    progress: false,
+    done: false,
+  };
+
   componentDidMount() {
-    const { history } = this.props;
-    this.requestApi(history.location.pathname);
+    const { history: { location: { pathname } } } = this.props;
+    this.requestApi(pathname);
+    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
+    const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY) || undefined;
+    const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
+      .some((recipe) => recipe.id === idRecipes) : false;
+
+    const atualStorageDone = getKeyOnStorage(DONE_RECIPES_KEY) || undefined;
+    const beOrNotBeDone = atualStorageDone ? atualStorageDone
+      .some((recipe) => recipe.id === idRecipes) : false;
+
+    const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || undefined;
+    const result = atualStorageProgress
+      ? Object.keys(atualStorageProgress[foodOrDrink]).includes(idRecipes)
+      : false;
+    this.setState({ favorite: beOrNotBeFavorite, progress: result, done: beOrNotBeDone });
   }
+
+  idPathname = (pathname) => {
+    const idRecipes = pathname.replace(/[^0-9]/g, '');
+    const foodOrDrink = pathname === `/meals/${idRecipes}` ? 'meals' : 'drinks';
+    const teste = { idRecipes, foodOrDrink };
+    return teste;
+  };
+
+  dispatchProgressRecipes = (pathname) => {
+    const { dispatch } = this.props;
+    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
+    // const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
+    // const result = atualStorageProgress
+    //   ? Object.values(atualStorageProgress[foodOrDrink])
+    //     .some((recipe) => recipe.id === idRecipes)
+    //   : false;
+    // if (result) {
+    dispatch(progressRecipes(idRecipes, foodOrDrink));
+    // }
+  };
 
   requestApi = async (pathname) => {
     const { dispatch } = this.props;
-    const idRecipes = pathname.replace(/[^0-9]/g, '');
+    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
     const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idRecipes}`;
     const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idRecipes}`;
     const urlApi = pathname === `/meals/${idRecipes}` ? urlMeals : urlDrinks;
     const response = await fetch(urlApi);
     const data = await response.json();
-    const foodOrDrink = pathname === `/meals/${idRecipes}` ? 'meals' : 'drinks';
     const result = data[foodOrDrink][0];
 
     const arrayUtils = ['idMeal',
-      'strMealThumb', 'strMeal', 'strCategory', 'strInstructions',
-      'strSource', 'strDrink', 'idDrink', 'strDrinkThumb', 'strAlcoholic'];
+      'strMealThumb', 'strMeal', 'strCategory', 'strInstructions', 'strArea',
+      'strSource', 'strDrink', 'idDrink', 'strDrinkThumb', 'strAlcoholic', 'strTags'];
 
     const regexIngredient = /strIngredient/i;
     const regexMeasure = /strMeasure/i;
-    console.log(result);
     const unInfo = Object.entries(result)
       .filter((key) => arrayUtils.includes(key[0]));
 
@@ -41,7 +94,6 @@ class RecipeDetails extends Component {
         mea.length > 1 ? mea[1] : null));
 
     const newResult = [Object.fromEntries(unInfo), listIngredients, listMeasure];
-
     console.log(newResult);
     dispatch(recipeDetails(newResult));
   };
@@ -49,6 +101,7 @@ class RecipeDetails extends Component {
   render() {
     const { recipeDetails2, history,
       imgSrc, nameRecipe, iframe, category } = this.props;
+    const { favorite, copyText, progress, done } = this.state;
     return (
       recipeDetails2.length > 0 ? (
         <section>
@@ -74,6 +127,9 @@ class RecipeDetails extends Component {
               title="Embedded youtube"
             />
           )}
+
+          {copyText && <span>Link copied!</span>}
+
           { recipeDetails2[1].map((detail, index) => (
             // O index na key pode dar muitos erros
             detail.length > 1 ? (
@@ -98,32 +154,54 @@ class RecipeDetails extends Component {
               </div>
             ) : null
           ))}
-          <nav className="buttonStartRecipe">
+          {!done && (
             <button
-              // className="buttonStartRecipe"
+              type="button"
+              className="buttonStartRecipe"
               data-testid="start-recipe-btn"
-              onClick={ () => history.push(`${history.location.pathname}/in-progress`) }
+              onClick={ () => {
+                this.dispatchProgressRecipes(history.location.pathname);
+                modifyProgressRecipeOnStorage(recipeDetails2[0], recipeDetails2[1]);
+                history.push(`${history.location.pathname}/in-progress`);
+              } }
             >
-              Start Recipe
-
+              {
+                progress ? 'Continue Recipe' : 'Start Recipe'
+              }
             </button>
+          )}
+
+          <div className="buttonsTopRecipe">
             <button
-              // className="buttonStartRecipe"
-              data-testid="share-btn"
-              onClick={ () => console.log('funciona compartilhar') }
+              className="buttonShareRecipe"
+              // data-testid="share-btn"
+              onClick={ () => {
+                copy(`http://localhost:3000${history.location.pathname}`);
+                this.setState({ copyText: true });
+              } }
             >
-              Share
-
+              <img
+                data-testid="share-btn"
+                src={ shareIcon }
+                alt="share"
+              />
             </button>
+
             <button
-              // className="buttonStartRecipe"
-              data-testid="favorite-btn"
-              onClick={ () => console.log('funciona favoritar') }
+              type="button"
+              className="buttonFavoriteRecipe"
+              onClick={ () => {
+                this.setState((initial) => ({ favorite: !initial.favorite }));
+                modifyFavoriteOnStorage(recipeDetails2[0]);
+              } }
             >
-              Favorite
-
+              <img
+                data-testid="favorite-btn"
+                src={ favorite ? blackHeart : whiteHeart }
+                alt="favorite"
+              />
             </button>
-          </nav>
+          </div>
 
         </section>
       ) : <h1>Loading...</h1>
@@ -138,6 +216,7 @@ RecipeDetails.propTypes = {
 const mapStateToProps = (state) => ({
   recipeDetails2: state.filterReducer.recipeDetails,
   apiCarrocel: state.filterReducer.apiCarrocel,
+  progressRecipes2: state.recipesReducer.progressRecipes,
 });
 
 export default connect(mapStateToProps)(RecipeDetails);
