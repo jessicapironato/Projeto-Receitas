@@ -7,21 +7,21 @@ import fetch from '../../cypress/mocks/fetch';
 import App from '../App';
 
 jest.mock('clipboard-copy');
+const TestIdRecipeImage = 'recipe-photo';
+const TestIdRecipeTitle = 'recipe-title';
+const TestIdRecipeCategory = 'recipe-category';
+const TestIdRecipeInstructions = 'instructions';
+const TestIdRecipeVideo = 'video';
+const TestIdBtnRecipeStart = 'start-recipe-btn';
+const TestIdBtnRecipeShare = 'share-btn';
+const TestIdBtnRecipeFavorite = 'favorite-btn';
+const testPathMealCorba = '/meals/52977';
+const testPathDrinkGG = '/drinks/15997';
 
-describe('Testa o componente Details', () => {
+describe('Testa o componente Details com rota Meals', () => {
   beforeEach(() => {
     global.fetch = jest.fn(fetch);
   });
-
-  const TestIdRecipeImage = 'recipe-photo';
-  const TestIdRecipeTitle = 'recipe-title';
-  const TestIdRecipeCategory = 'recipe-category';
-  const TestIdRecipeInstructions = 'instructions';
-  const TestIdRecipeVideo = 'video';
-  const TestIdBtnRecipeStart = 'start-recipe-btn';
-  const TestIdBtnRecipeShare = 'share-btn';
-  const TestIdBtnRecipeFavorite = 'favorite-btn';
-  const testPathMealCorba = '/meals/52977';
 
   it('1. <Meals> Testa a renderização correta em Meals', async () => {
     renderWithRouterAndRedux(
@@ -42,25 +42,7 @@ describe('Testa o componente Details', () => {
     expect(video).toBeVisible();
   });
 
-  it('2. <Drinks> Testa a renderização correta em Drinks', async () => {
-    renderWithRouterAndRedux(
-      <App />,
-      { initialEntries: ['/drinks/15997'] },
-    );
-
-    const image = await screen.findByTestId('recipe-photo');
-    const title = await screen.findByTestId('recipe-title');
-    const category = await screen.findByTestId('recipe-category');
-    const instructions = await screen.findByTestId('instructions');
-
-    expect(image).toBeVisible();
-    expect(title).toBeVisible();
-    expect(category).toBeVisible();
-
-    expect(instructions).toBeVisible();
-  });
-
-  it('3. <Meals> Testa botão StartRecipe', async () => {
+  it('2. <Meals> Testa botão StartRecipe', async () => {
     const { history } = renderWithRouterAndRedux(
       <App />,
       { initialEntries: [testPathMealCorba] },
@@ -73,7 +55,7 @@ describe('Testa o componente Details', () => {
     expect(history.location.pathname).toBe('/meals/52977/in-progress');
   });
 
-  it('4. <Meals> Testa botão ShareRecipe', async () => {
+  it('3. <Meals> Testa botão ShareRecipe', async () => {
     copy.mockImplementation(() => {
 
     });
@@ -96,7 +78,7 @@ describe('Testa o componente Details', () => {
     });
   });
 
-  it('5. <Meals> Testa botão FavoriteRecipe', async () => {
+  it('4. <Meals> Testa botão FavoriteRecipe', async () => {
     renderWithRouterAndRedux(
       <App />,
       { initialEntries: [testPathMealCorba] },
@@ -110,12 +92,99 @@ describe('Testa o componente Details', () => {
     expect(buttonFavoriteRecipe.src).toContain('http://localhost/blackHeartIcon.svg');
   });
 
-  it('6. <Detail> Se FavoriteRecipe <WhiteHeart> não está em local storage', async () => {
+  it('5. <Detail> Se FavoriteRecipe <WhiteHeart> não está em local storage', async () => {
     jest.mock('../services/localStorage');
 
     renderWithRouterAndRedux(
       <App />,
       { initialEntries: [testPathMealCorba] },
+    );
+
+    const buttonFavoriteRecipeWhite = await screen.findByTestId(TestIdBtnRecipeFavorite);
+
+    expect(buttonFavoriteRecipeWhite.textContent).toBe('');
+    expect(buttonFavoriteRecipeWhite).toBeInTheDocument();
+  });
+});
+
+describe('Testa o componente Details com rota Drinks', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn(fetch);
+  });
+
+  it('1. <Drinks> Testa a renderização correta em Drinks', async () => {
+    renderWithRouterAndRedux(
+      <App />,
+      { initialEntries: [testPathDrinkGG] },
+    );
+
+    const image = await screen.findByTestId(TestIdRecipeImage);
+    const title = await screen.findByTestId(TestIdRecipeTitle);
+    const category = await screen.findByTestId(TestIdRecipeCategory);
+    const instructions = await screen.findByTestId(TestIdRecipeInstructions);
+
+    expect(image).toBeInTheDocument();
+    expect(title).toBeVisible();
+    expect(category).toBeVisible();
+    expect(instructions).toBeVisible();
+  });
+
+  it('2. <Drinks> Testa botão StartRecipe', async () => {
+    const { history } = renderWithRouterAndRedux(
+      <App />,
+      { initialEntries: [testPathDrinkGG] },
+    );
+
+    const buttonStartRecipe = await screen.findByTestId(TestIdBtnRecipeStart);
+    expect(buttonStartRecipe).toBeInTheDocument();
+
+    userEvent.click(buttonStartRecipe);
+    expect(history.location.pathname).toBe('/drinks/15997/in-progress');
+  });
+
+  it('3. <Drinks> Testa botão ShareRecipe', async () => {
+    copy.mockImplementation(() => {
+
+    });
+
+    renderWithRouterAndRedux(
+      <App />,
+      { initialEntries: [testPathDrinkGG] },
+    );
+
+    const buttonSharedRecipe = await screen.findByTestId(TestIdBtnRecipeShare);
+    expect(buttonSharedRecipe).toBeInTheDocument();
+
+    userEvent.click(buttonSharedRecipe);
+    await waitFor(() => {
+      expect(copy).toBeCalled();
+    });
+
+    await waitFor(async () => {
+      expect(await screen.findByText(/link copied!/i)).toBeInTheDocument();
+    });
+  });
+
+  it('4. <Drinks> Testa botão FavoriteRecipe', async () => {
+    renderWithRouterAndRedux(
+      <App />,
+      { initialEntries: [testPathDrinkGG] },
+    );
+
+    const buttonFavoriteRecipe = await screen.findByTestId(TestIdBtnRecipeFavorite);
+    expect(buttonFavoriteRecipe).toBeInTheDocument();
+    expect(buttonFavoriteRecipe.src).toContain('http://localhost/whiteHeartIcon.svg');
+
+    userEvent.click(buttonFavoriteRecipe);
+    expect(buttonFavoriteRecipe.src).toContain('http://localhost/blackHeartIcon.svg');
+  });
+
+  it('5. <Detail> Se FavoriteRecipe <WhiteHeart> não está em local storage', async () => {
+    jest.mock('../services/localStorage');
+
+    renderWithRouterAndRedux(
+      <App />,
+      { initialEntries: [testPathDrinkGG] },
     );
 
     const buttonFavoriteRecipeWhite = await screen.findByTestId(TestIdBtnRecipeFavorite);
