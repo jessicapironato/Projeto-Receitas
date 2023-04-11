@@ -219,3 +219,5 @@ describe('.: Testa página <Profile> :.', () => {
   // npm run test-coverage -- --collectCoverageFrom=src/pages/Profile.js
   // npm run test Profile.test.js
 });
+
+// Testes Profile: Jéssica Pironato e Patrick Fonseca;
