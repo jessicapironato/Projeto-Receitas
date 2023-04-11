@@ -45,7 +45,7 @@ export const apiRequestRecipes = async (pathname) => {
   const { foodOrDrink } = idPathname(pathname);
   const urlFood = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
   const urlDrink = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
-  const urlApi = pathname === '/meals' ? urlFood : urlDrink;
+  const urlApi = foodOrDrink === 'meals' ? urlFood : urlDrink;
   const response = await fetch(urlApi);
   const data = await response.json();
   return Object.values(data)[0];

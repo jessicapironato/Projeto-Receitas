@@ -101,7 +101,7 @@ class RecipeDetails extends Component {
           <h2 data-testid="recipe-category">{recipeDetails2[0][category]}</h2>
 
           <p data-testid="instructions">{(recipeDetails2[0]).strInstructions}</p>
-          {/* {iframe && (
+          {iframe && (
             <iframe
               data-testid="video"
               width="853"
@@ -113,7 +113,7 @@ class RecipeDetails extends Component {
               allowFullScreen
               title="Embedded youtube"
             />
-          )} */}
+          )}
 
           {copyText && <span>Link copied!</span>}
 
