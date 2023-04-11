@@ -12,19 +12,41 @@ import shareIcon from '../images/shareIcon.svg';
 class RecipeInProgress extends Component {
   state = {
     favorite: false,
+    recipeDetails: {},
   };
 
+  componentDidMount() {
+    const { history: { location: { pathname } } } = this.props;
+    this.requestApi(pathname);
+    const { idRecipes, foodOrDrink } = idPathname(pathname);
+    const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY) || undefined;
+    const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
+      .some((recipe) => recipe.id === idRecipes) : false;
+
+    const atualStorageDone = getKeyOnStorage(DONE_RECIPES_KEY) || undefined;
+    const beOrNotBeDone = atualStorageDone ? atualStorageDone
+      .some((recipe) => recipe.id === idRecipes) : false;
+
+    const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || undefined;
+    const result = atualStorageProgress
+      ? Object.keys(atualStorageProgress[foodOrDrink]).includes(idRecipes)
+      : false;
+    this.setState({ favorite: beOrNotBeFavorite, progress: result, done: beOrNotBeDone });
+  }
+
   render() {
-    const { recipeDetails } = this.props;
-    const { favorite } = this.state;
+    const { recipeDetails, favorite } = this.state;
     return (
       <div>
         <img
           data-testid="recipe-photo"
-          src={ recipeDetails[0].strMealThumb }
+          src={ recipeDetails[0].strMealThumb || recipeDetails[0].strDrinkThumb }
           alt="oi"
         />
-        <h1 data-testid="recipe-title">{recipeDetails[0].strMeal}</h1>
+        <h1 data-testid="recipe-title">
+          {recipeDetails[0].strMeal
+        || recipeDetails[0].strDrink}
+        </h1>
         <h2 data-testid="recipe-category">
           {' '}
           {recipeDetails[0].strCategory}
@@ -33,10 +55,10 @@ class RecipeInProgress extends Component {
         <p data-testid="instructions">{recipeDetails[0].strInstructions}</p>
         <form>
           {recipeDetails[1]
-            .map((ingredient) => (
+            .map((ingredient, index) => (
               <label
                 htmlFor="ingredient"
-                key={ `recipeInProgress${recipeDetails[0].idMeal}` }
+                key={ `recipeInProgress${recipeDetails[1][index]}` }
               >
                 {ingredient}
                 <input type="checkbox" />
