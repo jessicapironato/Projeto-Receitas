@@ -90,16 +90,20 @@ export const modifyProgressRecipeOnStorage = ({
   const id = idMeal || idDrink;
   const mealOrDrink = id === idDrink ? 'drinks' : 'meals';
   const notmealOrDrink = id === idDrink ? 'meals' : 'drinks';
-  // console.log(ingredients);
-  // const teste = ingredients.reduce((acc, curr) => {
-  //   acc = { ...acc, [curr]: false };
-  //   return acc;
-  // }, {});
-  // console.log(teste);
+
+  const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || [];
+  const initialState = (atualStorage[mealOrDrink][id].length > 0 && atualStorage)
+    ? [...atualStorage[mealOrDrink][id]] : [];
+
+  const ingredientsObject = Object.entries(ingredients).reduce((acc, ingredient) => {
+    acc = [...acc, { [ingredient[0]]: ingredient[1] }];
+    return acc;
+  }, initialState);
+
   const progressResult = {
-    [id]: [...ingredients],
+    [id]: [...ingredientsObject],
   };
-  const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
+
   if (atualStorage) {
     setInProgressRecipesOnStorage({ ...atualStorage,
       [mealOrDrink]: { ...atualStorage[mealOrDrink], ...progressResult } });

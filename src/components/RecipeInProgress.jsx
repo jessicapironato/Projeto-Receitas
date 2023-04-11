@@ -6,9 +6,9 @@ import {
   modifyFavoriteOnStorage,
   getKeyOnStorage,
   FAVORITE_RECIPES_KEY,
-  // modifyProgressRecipeOnStorage,
+  modifyProgressRecipeOnStorage,
   // DONE_RECIPES_KEY,
-  // IN_PROGRESS_RECIPES_KEY,
+  IN_PROGRESS_RECIPES_KEY,
 } from '../services/localStorage';
 import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
@@ -26,8 +26,9 @@ class RecipeInProgress extends Component {
   async componentDidMount() {
     const { history: { location: { pathname } } } = this.props;
     const result = await apiRequestInProgress(pathname);
+    const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || undefined;
     const arrayUtils = ['strMealThumb', 'strMeal',
-      'strCategory', 'strInstructions', 'strArea',
+      'strCategory', 'strInstructions', 'strArea', 'idMeal', 'idDrink',
       'strSource', 'strDrink', 'strDrinkThumb', 'strAlcoholic', 'strTags'];
     const regexIngredient = /strIngredient/i;
     const regexMeasure = /strMeasure/i;
@@ -46,22 +47,27 @@ class RecipeInProgress extends Component {
     const newResult = [Object.fromEntries(unInfo), listIngredients, listMeasure];
     // Object.fromEntries transforma array de array em array de objeto.  [[0, 1][2, 3]] => [{0: 1} {2: 3}]
 
-    const { idRecipes } = idPathname(pathname);
+    const { idRecipes, foodOrDrink } = idPathname(pathname);
     const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY) || undefined;
     const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
       .some((recipe) => recipe.id === idRecipes) : false;
+
+    const teste = atualStorage[foodOrDrink][idRecipes]
+      ? atualStorage[foodOrDrink][idRecipes] : false;
+    console.log(teste);
 
     this.setState({ favorite: beOrNotBeFavorite, recipeDetails: newResult });
   }
 
   handleCheckedIngredient = ({ target }) => {
-    // const { recipeDetails } = this.state;
+    const { recipeDetails, checkedList } = this.state;
     const { name, value } = target;
     const result = target.type === 'checkbox' ? target.checked : value;
     this.setState((i) => ({
       checkedList: { ...i.checkedList, [name]: result },
     }));
-    // modifyProgressRecipeOnStorage(recipeDetails[0], recipeDetails[1]);
+    console.log(checkedList);
+    modifyProgressRecipeOnStorage(recipeDetails[0], checkedList);
   };
 
   render() {
@@ -96,6 +102,8 @@ class RecipeInProgress extends Component {
                         htmlFor="ingredient"
                         key={ `recipeInProgress${recipeDetails[1][index]}
                         ${recipeDetails[2][index]}` }
+                        // className={ checkedList.length > 0 && Object
+                        //   .values(checkedList)[0][ingredient] === true ? 'risk' : '' }
                         className={ checkedList[ingredient] ? 'risk' : '' }
                       >
                         {ingredient}
