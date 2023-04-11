@@ -6,8 +6,9 @@ import {
   modifyFavoriteOnStorage,
   getKeyOnStorage,
   FAVORITE_RECIPES_KEY,
+  // modifyProgressRecipeOnStorage,
   // DONE_RECIPES_KEY,
-  IN_PROGRESS_RECIPES_KEY,
+  // IN_PROGRESS_RECIPES_KEY,
 } from '../services/localStorage';
 import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
@@ -19,6 +20,7 @@ class RecipeInProgress extends Component {
   state = {
     favorite: false,
     recipeDetails: [],
+    checkedList: {},
   };
 
   async componentDidMount() {
@@ -27,7 +29,6 @@ class RecipeInProgress extends Component {
     const arrayUtils = ['strMealThumb', 'strMeal',
       'strCategory', 'strInstructions', 'strArea',
       'strSource', 'strDrink', 'strDrinkThumb', 'strAlcoholic', 'strTags'];
-
     const regexIngredient = /strIngredient/i;
     const regexMeasure = /strMeasure/i;
     const unInfo = Object.entries(result)
@@ -35,12 +36,11 @@ class RecipeInProgress extends Component {
 
     const listIngredients = Object.entries(result)
       .filter((key) => regexIngredient.test(key[0]))
-      .map((ingredient) => (ingredient[1].length > 1 ? ingredient[1] : null));
+      .map((ingredient) => (ingredient[1] ? ingredient[1] : false));
 
-    // console.log(listIngredients);
     const listMeasure = Object.entries(result)
       .filter((key) => regexMeasure
-        .test(key[0])).map((measure) => (measure[1].length > 1 ? measure[1] : null));
+        .test(key[0])).map((measure) => (measure[1] ? measure[1] : false));
 
     const newResult = [Object.fromEntries(unInfo), listIngredients, listMeasure];
     // Object.fromEntries transforma array de array em array de objeto.  [[0, 1][2, 3]] => [{0: 1} {2: 3}]
@@ -50,21 +50,21 @@ class RecipeInProgress extends Component {
     const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
       .some((recipe) => recipe.id === idRecipes) : false;
 
-    // const atualStorageDone = getKeyOnStorage(DONE_RECIPES_KEY) || undefined;
-    // const beOrNotBeDone = atualStorageDone ? atualStorageDone
-    //   .some((recipe) => recipe.id === idRecipes) : false;
-
-    // const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY)
-    // || undefined;
-    // console.log(atualStorageProgress);
-    // const result = atualStorageProgress
-    //   ? Object.keys(atualStorageProgress[foodOrDrink]).includes(idRecipes)
-    //   : false;
     this.setState({ favorite: beOrNotBeFavorite, recipeDetails: newResult });
   }
 
+  handleCheckedIngredient = ({ target }) => {
+    // const { recipeDetails } = this.state;
+    const { name, value } = target;
+    const result = target.type === 'checkbox' ? target.checked : value;
+    this.setState((i) => ({
+      checkedList: { ...i.checkedList, [name]: result },
+    }));
+    // modifyProgressRecipeOnStorage(recipeDetails[0], recipeDetails[1]);
+  };
+
   render() {
-    const { recipeDetails, favorite } = this.state;
+    const { recipeDetails, favorite, checkedList } = this.state;
     return (
       <div>
         {recipeDetails.length && (
@@ -93,13 +93,16 @@ class RecipeInProgress extends Component {
                       <label
                         data-testid={ `${index}-ingredient-step` }
                         htmlFor="ingredient"
-                        key={ `recipeInProgress${recipeDetails[1][index]}${index}` }
+                        key={ `recipeInProgress${recipeDetails[1][index]}
+                        ${recipeDetails[2][index]}` }
+                        className={ checkedList[ingredient] ? 'risk' : '' }
                       >
                         {ingredient}
                         <input
                           type="checkbox"
-                          onClick={ () => {} }
-                          name="aksudgask"
+                          onClick={ (e) => this.handleCheckedIngredient(e) }
+                          name={ ingredient }
+                          value={ checkedList[ingredient] }
                         />
                       </label>
                     );

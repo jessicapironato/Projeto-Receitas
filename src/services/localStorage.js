@@ -90,6 +90,8 @@ export const modifyProgressRecipeOnStorage = ({
   const id = idMeal || idDrink;
   const mealOrDrink = id === idDrink ? 'drinks' : 'meals';
   const notmealOrDrink = id === idDrink ? 'meals' : 'drinks';
+  // console.log(ingredients);
+  // const teste = ingredients.map((ingredient) => { ingredient: false });
   const progressResult = {
     [id]: [...ingredients],
   };
