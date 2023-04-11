@@ -72,7 +72,6 @@ class RecipeDetails extends Component {
     const urlApi = pathname === `/meals/${idRecipes}` ? urlMeals : urlDrinks;
     const response = await fetch(urlApi);
     const data = await response.json();
-    console.log(data);
     const result = data[foodOrDrink][0];
 
     const arrayUtils = ['idMeal',
@@ -95,6 +94,7 @@ class RecipeDetails extends Component {
         mea.length > 1 ? mea[1] : null));
 
     const newResult = [Object.fromEntries(unInfo), listIngredients, listMeasure];
+    console.log(newResult);
     dispatch(recipeDetails(newResult));
   };
 
