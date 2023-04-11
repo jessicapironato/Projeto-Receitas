@@ -91,7 +91,11 @@ export const modifyProgressRecipeOnStorage = ({
   const mealOrDrink = id === idDrink ? 'drinks' : 'meals';
   const notmealOrDrink = id === idDrink ? 'meals' : 'drinks';
   // console.log(ingredients);
-  // const teste = ingredients.map((ingredient) => { ingredient: false });
+  // const teste = ingredients.reduce((acc, curr) => {
+  //   acc = { ...acc, [curr]: false };
+  //   return acc;
+  // }, {});
+  // console.log(teste);
   const progressResult = {
     [id]: [...ingredients],
   };

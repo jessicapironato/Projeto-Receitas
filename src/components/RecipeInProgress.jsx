@@ -37,7 +37,8 @@ class RecipeInProgress extends Component {
     const listIngredients = Object.entries(result)
       .filter((key) => regexIngredient.test(key[0]))
       .map((ingredient) => (ingredient[1] ? ingredient[1] : false));
-
+      // .map((ingredient) => (ingredient[1]?.length > 1 ? ingredient[1] : false));
+      // esse ?. funciona, pois se não tiver length ele retorna undefined
     const listMeasure = Object.entries(result)
       .filter((key) => regexMeasure
         .test(key[0])).map((measure) => (measure[1] ? measure[1] : false));
