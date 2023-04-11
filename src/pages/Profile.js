@@ -2,16 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { getKeyOnStorage, USER_KEY } from '../services/localStorage';
+import { getUserOnStorage } from '../services/localStorage';
 
 class Profile extends Component {
-  getLocalStorageUSer = () => {
-    const userEmail = getKeyOnStorage(USER_KEY);
-    if (userEmail) {
-      return userEmail.email;
-    }
-    return '';
-  };
+  getLocalStorageUSer = () => getUserOnStorage().email;
 
   logoutUser = () => {
     const { history } = this.props;

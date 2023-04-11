@@ -2,6 +2,7 @@ export const USER_KEY = 'user';
 export const DONE_RECIPES_KEY = 'doneRecipes';
 export const FAVORITE_RECIPES_KEY = 'favoriteRecipes';
 export const IN_PROGRESS_RECIPES_KEY = 'inProgressRecipes';
+export const USER_NULL = { email: '' };
 
 export const setUserOnStorage = (user) => {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -23,6 +24,8 @@ export const getKeyOnStorage = (key) => {
   const result = localStorage.getItem(key);
   return JSON.parse(result);
 };
+export const getUserOnStorage = () => JSON.parse(localStorage
+  .getItem(USER_KEY)) || USER_NULL;
 
 export const modifyUserOnStorage = (property, newValue) => {
   const user = getKeyOnStorage(USER_KEY);

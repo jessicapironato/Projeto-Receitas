@@ -14,6 +14,8 @@ import {
   DONE_RECIPES_KEY,
   modifyProgressRecipeOnStorage,
 } from '../services/localStorage';
+import { idPathname } from '../tests/utils/helpers';
+import { apiRequest } from '../services/coffeAndBread';
 
 // const copy = require('clipboard-copy');
 
@@ -28,7 +30,7 @@ class RecipeDetails extends Component {
   componentDidMount() {
     const { history: { location: { pathname } } } = this.props;
     this.requestApi(pathname);
-    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
+    const { idRecipes, foodOrDrink } = idPathname(pathname);
     const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY) || undefined;
     const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
       .some((recipe) => recipe.id === idRecipes) : false;
@@ -44,16 +46,9 @@ class RecipeDetails extends Component {
     this.setState({ favorite: beOrNotBeFavorite, progress: result, done: beOrNotBeDone });
   }
 
-  idPathname = (pathname) => {
-    const idRecipes = pathname.replace(/[^0-9]/g, '');
-    const foodOrDrink = pathname === `/meals/${idRecipes}` ? 'meals' : 'drinks';
-    const teste = { idRecipes, foodOrDrink };
-    return teste;
-  };
-
   dispatchProgressRecipes = (pathname) => {
     const { dispatch } = this.props;
-    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
+    const { idRecipes, foodOrDrink } = idPathname(pathname);
     // const atualStorageProgress = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
     // const result = atualStorageProgress
     //   ? Object.values(atualStorageProgress[foodOrDrink])
@@ -66,14 +61,7 @@ class RecipeDetails extends Component {
 
   requestApi = async (pathname) => {
     const { dispatch } = this.props;
-    const { idRecipes, foodOrDrink } = this.idPathname(pathname);
-    const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idRecipes}`;
-    const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idRecipes}`;
-    const urlApi = pathname === `/meals/${idRecipes}` ? urlMeals : urlDrinks;
-    const response = await fetch(urlApi);
-    const data = await response.json();
-    const result = data[foodOrDrink][0];
-
+    const result = await apiRequest(pathname);
     const arrayUtils = ['idMeal',
       'strMealThumb', 'strMeal', 'strCategory', 'strInstructions', 'strArea',
       'strSource', 'strDrink', 'idDrink', 'strDrinkThumb', 'strAlcoholic', 'strTags'];
@@ -94,7 +82,6 @@ class RecipeDetails extends Component {
         mea.length > 1 ? mea[1] : null));
 
     const newResult = [Object.fromEntries(unInfo), listIngredients, listMeasure];
-    console.log(newResult);
     dispatch(recipeDetails(newResult));
   };
 
@@ -114,7 +101,7 @@ class RecipeDetails extends Component {
           <h2 data-testid="recipe-category">{recipeDetails2[0][category]}</h2>
 
           <p data-testid="instructions">{(recipeDetails2[0]).strInstructions}</p>
-          {iframe && (
+          {/* {iframe && (
             <iframe
               data-testid="video"
               width="853"
@@ -126,7 +113,7 @@ class RecipeDetails extends Component {
               allowFullScreen
               title="Embedded youtube"
             />
-          )}
+          )} */}
 
           {copyText && <span>Link copied!</span>}
 
