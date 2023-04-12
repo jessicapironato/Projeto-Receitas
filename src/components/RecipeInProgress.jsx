@@ -159,6 +159,7 @@ class RecipeInProgress extends Component {
             <button
               data-testid="finish-recipe-btn"
               type="button"
+              disabled={ false }
               onClick={ () => modifyDoneRecipeOnStorage(
                 recipeDetails[0],
                 new Date().toDateString(),

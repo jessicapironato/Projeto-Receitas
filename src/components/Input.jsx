@@ -34,7 +34,11 @@ class Input extends Component {
     this.setState({
       [name]: result,
     });
-    const localStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
+
+    const localStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY)
+    || { [foodOrDrink]: {
+      [idRecipes]: [],
+    } };
     const newIngredient = result ? false : nameLabel;
 
     const newIngredients = localStorage
@@ -45,7 +49,7 @@ class Input extends Component {
     && { ...localStorage,
       [foodOrDrink]: { ...localStorage[foodOrDrink],
         [idRecipes]: [...newIngredients] } };
-
+    // console.log(newLocalStorage);
     setInProgressRecipesOnStorage(newLocalStorage);
   };
 
