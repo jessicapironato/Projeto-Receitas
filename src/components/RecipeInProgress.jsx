@@ -15,19 +15,21 @@ import blackHeart from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import { idPathname } from '../tests/utils/helpers';
 import { apiRequestInProgress } from '../services/coffeAndBread';
+import Input from './Input';
 
 class RecipeInProgress extends Component {
   state = {
     favorite: false,
     recipeDetails: [],
-    checkedList: {},
+    // checkedList: [],
   };
 
   async componentDidMount() {
     const { history: { location: { pathname } } } = this.props;
     const result = await apiRequestInProgress(pathname);
+    // const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || undefined;
     const arrayUtils = ['strMealThumb', 'strMeal',
-      'strCategory', 'strInstructions', 'strArea',
+      'strCategory', 'strInstructions', 'strArea', 'idMeal', 'idDrink',
       'strSource', 'strDrink', 'strDrinkThumb', 'strAlcoholic', 'strTags'];
     const regexIngredient = /strIngredient/i;
     const regexMeasure = /strMeasure/i;
@@ -54,18 +56,21 @@ class RecipeInProgress extends Component {
     this.setState({ favorite: beOrNotBeFavorite, recipeDetails: newResult });
   }
 
-  handleCheckedIngredient = ({ target }) => {
-    // const { recipeDetails } = this.state;
-    const { name, value } = target;
-    const result = target.type === 'checkbox' ? target.checked : value;
-    this.setState((i) => ({
-      checkedList: { ...i.checkedList, [name]: result },
-    }));
-    // modifyProgressRecipeOnStorage(recipeDetails[0], recipeDetails[1]);
-  };
+  // handleCheckedIngredient = ({ target }) => {
+  //   const { recipeDetails, checkedList } = this.state;
+  //   const { name, value } = target;
+  //   const result = target.type === 'checkbox' ? target.checked : value;
+  //   // const checkList2 = { ...checkedList, [name]: result };
+  //   this.setState((i) => ({
+  //     checkedList: [ ...i.checkedList, [name]: result ],
+  //   }));
+  //   // console.log(checkList2);
+  //   // modifyProgressRecipeOnStorage(recipeDetails[0], checkList2);
+  // };
 
   render() {
-    const { recipeDetails, favorite, checkedList } = this.state;
+    const { recipeDetails, favorite } = this.state;
+    const { history } = this.props;
     return (
       <div>
         {recipeDetails.length && (
@@ -91,21 +96,30 @@ class RecipeInProgress extends Component {
                 .map((ingredient, index) => {
                   if (ingredient) {
                     return (
-                      <label
-                        data-testid={ `${index}-ingredient-step` }
-                        htmlFor="ingredient"
+                      <Input
+                        history={ history }
                         key={ `recipeInProgress${recipeDetails[1][index]}
-                        ${recipeDetails[2][index]}` }
-                        className={ checkedList[ingredient] ? 'risk' : '' }
-                      >
-                        {ingredient}
-                        <input
-                          type="checkbox"
-                          onClick={ (e) => this.handleCheckedIngredient(e) }
-                          name={ ingredient }
-                          value={ checkedList[ingredient] }
-                        />
-                      </label>
+                      //   ${recipeDetails[2][index]}` }
+                        type="checkbox"
+                        nameLabel={ ingredient }
+                        dataTestId={ `${index}-ingredient-step` }
+                      />
+                      // <label
+                      //   data-testid=
+                      //   htmlFor="ingredient"
+                      //
+                      //   // className={ checkedList.length > 0 && Object
+                      //   //   .values(checkedList)[0][ingredient] === true ? 'risk' : '' }
+                      //   className={ checkedList[ingredient] ? 'risk' : '' }
+                      // >
+                      //   {ingredient}
+                      //   <input
+                      //     type="checkbox"
+                      //     onClick={ (e) => this.handleCheckedIngredient(e) }
+                      //     name={ ingredient }
+                      //     value={ checkedList[ingredient] }
+                      //   />
+                      // </label>
                     );
                   }
                   return null;
