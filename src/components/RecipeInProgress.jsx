@@ -6,27 +6,28 @@ import {
   modifyFavoriteOnStorage,
   getKeyOnStorage,
   FAVORITE_RECIPES_KEY,
-  modifyProgressRecipeOnStorage,
+  // modifyProgressRecipeOnStorage,
   // DONE_RECIPES_KEY,
-  IN_PROGRESS_RECIPES_KEY,
+  // IN_PROGRESS_RECIPES_KEY,
 } from '../services/localStorage';
 import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import { idPathname } from '../tests/utils/helpers';
 import { apiRequestInProgress } from '../services/coffeAndBread';
+import Input from './Input';
 
 class RecipeInProgress extends Component {
   state = {
     favorite: false,
     recipeDetails: [],
-    checkedList: {},
+    // checkedList: [],
   };
 
   async componentDidMount() {
     const { history: { location: { pathname } } } = this.props;
     const result = await apiRequestInProgress(pathname);
-    const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || undefined;
+    // const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || undefined;
     const arrayUtils = ['strMealThumb', 'strMeal',
       'strCategory', 'strInstructions', 'strArea', 'idMeal', 'idDrink',
       'strSource', 'strDrink', 'strDrinkThumb', 'strAlcoholic', 'strTags'];
@@ -47,31 +48,29 @@ class RecipeInProgress extends Component {
     const newResult = [Object.fromEntries(unInfo), listIngredients, listMeasure];
     // Object.fromEntries transforma array de array em array de objeto.  [[0, 1][2, 3]] => [{0: 1} {2: 3}]
 
-    const { idRecipes, foodOrDrink } = idPathname(pathname);
+    const { idRecipes } = idPathname(pathname);
     const atualStorageFavorite = getKeyOnStorage(FAVORITE_RECIPES_KEY) || undefined;
     const beOrNotBeFavorite = atualStorageFavorite ? atualStorageFavorite
       .some((recipe) => recipe.id === idRecipes) : false;
 
-    const teste = atualStorage[foodOrDrink][idRecipes]
-      ? atualStorage[foodOrDrink][idRecipes] : false;
-    console.log(teste);
-
     this.setState({ favorite: beOrNotBeFavorite, recipeDetails: newResult });
   }
 
-  handleCheckedIngredient = ({ target }) => {
-    const { recipeDetails, checkedList } = this.state;
-    const { name, value } = target;
-    const result = target.type === 'checkbox' ? target.checked : value;
-    this.setState((i) => ({
-      checkedList: { ...i.checkedList, [name]: result },
-    }));
-    console.log(checkedList);
-    modifyProgressRecipeOnStorage(recipeDetails[0], checkedList);
-  };
+  // handleCheckedIngredient = ({ target }) => {
+  //   const { recipeDetails, checkedList } = this.state;
+  //   const { name, value } = target;
+  //   const result = target.type === 'checkbox' ? target.checked : value;
+  //   // const checkList2 = { ...checkedList, [name]: result };
+  //   this.setState((i) => ({
+  //     checkedList: [ ...i.checkedList, [name]: result ],
+  //   }));
+  //   // console.log(checkList2);
+  //   // modifyProgressRecipeOnStorage(recipeDetails[0], checkList2);
+  // };
 
   render() {
-    const { recipeDetails, favorite, checkedList } = this.state;
+    const { recipeDetails, favorite } = this.state;
+    const { history } = this.props;
     return (
       <div>
         {recipeDetails.length && (
@@ -97,23 +96,30 @@ class RecipeInProgress extends Component {
                 .map((ingredient, index) => {
                   if (ingredient) {
                     return (
-                      <label
-                        data-testid={ `${index}-ingredient-step` }
-                        htmlFor="ingredient"
+                      <Input
+                        history={ history }
                         key={ `recipeInProgress${recipeDetails[1][index]}
-                        ${recipeDetails[2][index]}` }
-                        // className={ checkedList.length > 0 && Object
-                        //   .values(checkedList)[0][ingredient] === true ? 'risk' : '' }
-                        className={ checkedList[ingredient] ? 'risk' : '' }
-                      >
-                        {ingredient}
-                        <input
-                          type="checkbox"
-                          onClick={ (e) => this.handleCheckedIngredient(e) }
-                          name={ ingredient }
-                          value={ checkedList[ingredient] }
-                        />
-                      </label>
+                      //   ${recipeDetails[2][index]}` }
+                        type="checkbox"
+                        nameLabel={ ingredient }
+                        dataTestId={ `${index}-ingredient-step` }
+                      />
+                      // <label
+                      //   data-testid=
+                      //   htmlFor="ingredient"
+                      //
+                      //   // className={ checkedList.length > 0 && Object
+                      //   //   .values(checkedList)[0][ingredient] === true ? 'risk' : '' }
+                      //   className={ checkedList[ingredient] ? 'risk' : '' }
+                      // >
+                      //   {ingredient}
+                      //   <input
+                      //     type="checkbox"
+                      //     onClick={ (e) => this.handleCheckedIngredient(e) }
+                      //     name={ ingredient }
+                      //     value={ checkedList[ingredient] }
+                      //   />
+                      // </label>
                     );
                   }
                   return null;

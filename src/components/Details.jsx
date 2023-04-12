@@ -12,7 +12,7 @@ import {
   IN_PROGRESS_RECIPES_KEY,
   getKeyOnStorage,
   DONE_RECIPES_KEY,
-  modifyProgressRecipeOnStorage,
+  setProgressRecipeOnStorage,
 } from '../services/localStorage';
 import { idPathname } from '../tests/utils/helpers';
 import { apiRequest } from '../services/coffeAndBread';
@@ -148,7 +148,7 @@ class RecipeDetails extends Component {
               data-testid="start-recipe-btn"
               onClick={ () => {
                 this.dispatchProgressRecipes(history.location.pathname);
-                modifyProgressRecipeOnStorage(recipeDetails2[0], recipeDetails2[1]);
+                setProgressRecipeOnStorage(recipeDetails2[0], []);
                 history.push(`${history.location.pathname}/in-progress`);
               } }
             >

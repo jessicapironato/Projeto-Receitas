@@ -85,25 +85,21 @@ export const modifyDoneRecipeOnStorage = ({
   }
 };
 
-export const modifyProgressRecipeOnStorage = ({
+export const setProgressRecipeOnStorage = ({
   idMeal, idDrink }, ingredients) => {
   const id = idMeal || idDrink;
   const mealOrDrink = id === idDrink ? 'drinks' : 'meals';
   const notmealOrDrink = id === idDrink ? 'meals' : 'drinks';
+  const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || undefined;
 
-  const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY) || [];
-  const initialState = (atualStorage[mealOrDrink][id].length > 0 && atualStorage)
-    ? [...atualStorage[mealOrDrink][id]] : [];
-
-  const ingredientsObject = Object.entries(ingredients).reduce((acc, ingredient) => {
-    acc = [...acc, { [ingredient[0]]: ingredient[1] }];
-    return acc;
-  }, initialState);
+  // const ingredientsObject = ingredients.reduce((acc, ingredient) => {
+  //   acc = [...acc, { [ingredient]: false }];
+  //   return acc;
+  // }, []);
 
   const progressResult = {
-    [id]: [...ingredientsObject],
+    [id]: [...ingredients],
   };
-
   if (atualStorage) {
     setInProgressRecipesOnStorage({ ...atualStorage,
       [mealOrDrink]: { ...atualStorage[mealOrDrink], ...progressResult } });
@@ -113,6 +109,46 @@ export const modifyProgressRecipeOnStorage = ({
       [notmealOrDrink]: {} });
   }
 };
+
+// export const modifyProgressRecipeOnStorage = ({
+//   idMeal, idDrink }, ingredients) => {
+//   const id = idMeal || idDrink;
+//   const mealOrDrink = id === idDrink ? 'drinks' : 'meals';
+
+//   const atualStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY);
+
+//   const initialState = [...atualStorage[mealOrDrink][id]];
+//   console.log(atualStorage[mealOrDrink][id]);
+//   const ingredientsObject = Object.entries(ingredients).reduce((acc, ingredient2) => {
+//     console.log(ingredient2);
+//     const tacc = [...acc, { [ingredient2[0]]: ingredient2[1] }];
+//     return tacc;
+//   }, initialState);
+//   console.log(Object.entries(ingredients));
+//   const teste = Object.entries(ingredients).map((ingredient) => {
+//     const teste2 = atualStorage[mealOrDrink][id].find((reserva) => {
+//       console.log(reserva);
+//       if (ingredient[0] === Object.keys(reserva)[0]) {
+//         return true;
+//       }
+//     });
+//     console.log(teste2);
+//     const ingredientEntrie = Object.entries(teste2);
+//     if (ingredientEntrie[0] === ingredient[0]) {
+//       return { [ingredientEntrie[1]]: !ingredient[1] };
+//     }
+//     return ingredient;
+//   });
+//   console.log(teste);
+
+//   console.log(ingredientsObject);
+
+// console.log(ingredientsObject);
+// const progressResult = {
+//   [id]: [...ingredientsObject],
+// };
+// console.log(progressResult);
+// };
 
 // Requisito 2-6: group Programming André Porto,Gregório Bezerra,Jéssica Pironato, Josiane Oliveira, Patrick Fonseca;
 // inProgressRecipes
