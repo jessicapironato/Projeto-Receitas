@@ -3,14 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
 import renderWithRouterAndRedux from './utils/rwrar';
 import App from '../App';
+import fetch from '../../cypress/mocks/fetch';
 
 describe('<Meals> Testa as  categorias dos botões de Meals ', () => {
   const pathnameMeals = '/meals';
   const TestIdBtnIconMealsBeef = 'Beef-category-filter';
-  // const TestIdBtnIconMealsGoat = '${categoryName}-category-filter';
-  // const TestIdBtnIconMealsChicken = '${categoryName}-category-filter';
-  // const TestIdBtnIconMealsBreakfast = '${categoryName}-category-filter';
-  // const TestIdBtnIconMealsDessert = '${categoryName}-category-filter';
+
   beforeEach(() => {
     global.fetch = jest.fn(fetch);
   });
@@ -28,18 +26,13 @@ describe('<Meals> Testa as  categorias dos botões de Meals ', () => {
     const firstRecipeBeef = await screen.findByText(/beef and mustard pie/i);
 
     expect(firstRecipeBeef).toBeVisible();
+
+    userEvent.click(buttonIconBeef);
   });
 });
 
 describe('<Drinks> Testa as  categorias dos botões de Drinks', () => {
-  // const TestIdBtnIconDrinksOrdinary = '${categoryName}-category-filter';
-  // const TestIdBtnIconDrinksCocktail = '${categoryName}-category-filter';
-  // const TestIdBtnIconDrinksShake = '${categoryName}-category-filter';
-  // const TestIdBtnIconDrinksOther = '${categoryName}-category-filter';
-  // const TestIdBtnIconDrinksCocoa = '${categoryName}-category-filter';
-
   const TestIdBtnIconDrinksOrdinary = 'Ordinary Drink-category-filter';
-  // const TestIdBtnAll = 'All-category-filter';
 
   const pathnameDrinks = '/drinks';
   beforeEach(() => {
@@ -56,23 +49,43 @@ describe('<Drinks> Testa as  categorias dos botões de Drinks', () => {
     expect(buttonIconOrdinaryDrink).toBeVisible();
 
     userEvent.click(buttonIconOrdinaryDrink);
-
     const firstRecipeDrink = await screen.findByText(/ordinary drink/i);
 
     expect(firstRecipeDrink).toBeVisible();
+
+    userEvent.click(buttonIconOrdinaryDrink);
+
+    const gg = await screen.findByText(/gg/i);
+
+    expect(gg).toBeVisible();
   });
 
-  // it('2. <Drinks> Testa filtro All', async () => {
-  //   renderWithRouterAndRedux(
-  //     <App />,
-  //     { initialEntries: [pathnameDrinks] },
-  //   );
-  //   const buttonIconAll = await screen.findByText(/all/i);
-  //   expect(buttonIconAll).toBeVisible();
+  it('2. <Drinks> Testa filtro All', async () => {
+    renderWithRouterAndRedux(
+      <App />,
+      { initialEntries: [pathnameDrinks] },
+    );
+    const buttonIconAll = await screen.findByText(/all/i);
+    expect(buttonIconAll).not.toBeDisabled();
+    expect(buttonIconAll).toBeVisible();
 
-  //   userEvent.click(buttonIconAll);
-  //   const gg = await screen.findByText(/gg/i);
-  //   expect(gg).toBeVisible();
-  // });
+    userEvent.click(buttonIconAll);
+    const gg = await screen.findByText(/gg/i);
+    expect(gg).toBeVisible();
+  });
+
+  it('3. <Drinks> Testa filtro All', async () => {
+    renderWithRouterAndRedux(
+      <App />,
+      { initialEntries: [pathnameDrinks] },
+    );
+    const buttonIconAll = await screen.findByText(/all/i);
+    expect(buttonIconAll).not.toBeDisabled();
+    expect(buttonIconAll).toBeVisible();
+
+    userEvent.click(buttonIconAll);
+    const gg = await screen.findByText(/gg/i);
+    expect(gg).toBeVisible();
+  });
 });
 // Category Buttons: Patrick Fonseca, Jéssica Pironato;
