@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   getKeyOnStorage,
   setInProgressRecipesOnStorage,
   IN_PROGRESS_RECIPES_KEY,
 } from '../services/localStorage';
 import { idPathname } from '../tests/utils/helpers';
+import { checkIngredientSum, checkIngredientSub } from '../redux/actions';
 
 class Input extends Component {
   state = {
@@ -26,7 +28,7 @@ class Input extends Component {
   }
 
   handleCheckedIngredient = ({ target }) => {
-    const { history: { location: { pathname } }, nameLabel } = this.props;
+    const { history: { location: { pathname } }, nameLabel, dispatch } = this.props;
     // const { check } = this.state;
     const { idRecipes, foodOrDrink } = idPathname(pathname);
     const { name, value } = target;
@@ -34,11 +36,14 @@ class Input extends Component {
     this.setState({
       [name]: result,
     });
-
+    if (result) {
+      dispatch(checkIngredientSum());
+    } else {
+      dispatch(checkIngredientSub());
+    }
+    const notFoodOrDrink = foodOrDrink === 'meals' ? 'drinks' : 'meals';
     const localStorage = getKeyOnStorage(IN_PROGRESS_RECIPES_KEY)
-    || { [foodOrDrink]: {
-      [idRecipes]: [],
-    } };
+    || { [foodOrDrink]: { [idRecipes]: [nameLabel] }, [notFoodOrDrink]: {} };
     const newIngredient = result ? false : nameLabel;
 
     const newIngredients = localStorage
@@ -49,7 +54,7 @@ class Input extends Component {
     && { ...localStorage,
       [foodOrDrink]: { ...localStorage[foodOrDrink],
         [idRecipes]: [...newIngredients] } };
-    // console.log(newLocalStorage);
+
     setInProgressRecipesOnStorage(newLocalStorage);
   };
 
@@ -87,4 +92,4 @@ Input.defaultProps = {
   onChange: null,
 };
 
-export default Input;
+export default connect()(Input);
